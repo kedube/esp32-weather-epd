@@ -76,12 +76,15 @@ const char *TXT_SUNSET             = "Sunset";
 const char *TXT_WIND               = "Wind";
 const char *TXT_HUMIDITY           = "Humidity";
 const char *TXT_UV_INDEX           = "UV Index";
+const char *TXT_SOLAR_RADIATION    = "Solar Radiation";
 const char *TXT_PRESSURE           = "Pressure";
-const char *TXT_AIR_QUALITY        = "Air Quality";
-const char *TXT_AIR_POLLUTION      = "Air Pollution";
-const char *TXT_VISIBILITY         = "Visibility";
+const char *TXT_WBGT               = "WBGT";
+const char *TXT_LIGHTNING_1HR      = "Strikes 1hr";
+const char *TXT_LIGHTNING_3HR      = "Strikes 3hr";
+const char *TXT_LIGHTNING_DETECTED = "Lightning";
 const char *TXT_INDOOR_TEMPERATURE = "Temperature";
 const char *TXT_INDOOR_HUMIDITY    = "Humidity";
+const char *TXT_DEW_POINT          = "Dew Point";
 
 // UV INDEX
 const char *TXT_UV_LOW       = "Low";
@@ -89,6 +92,13 @@ const char *TXT_UV_MODERATE  = "Moderate";
 const char *TXT_UV_HIGH      = "High";
 const char *TXT_UV_VERY_HIGH = "Very High";
 const char *TXT_UV_EXTREME   = "Extreme";
+
+//WBGT 
+const char *TXT_WBGT_NORISK = "No Risk";
+const char *TXT_WBGT_LOWRISK = "Low Risk";
+const char *TXT_WBGT_MODRISK = "Moderate Risk";
+const char *TXT_WBGT_HGIHRISK = "High Risk";
+const char *TXT_WBGT_EXTREMERISK = "Extreme Risk";
 
 // WIFI
 const char *TXT_WIFI_EXCELLENT     = "Excellent";
@@ -124,6 +134,8 @@ const char *TXT_UNITS_DIST_MILES      = "mi";
 const char *TXT_UNITS_PRECIP_MILLIMETERS = "mm";
 const char *TXT_UNITS_PRECIP_CENTIMETERS = "cm";
 const char *TXT_UNITS_PRECIP_INCHES      = "in";
+// UNITS SYMBOLS - Solar radiation
+const char *TXT_UNITS_SOLAR_RADIATION_WATTS_METERSQUARED = "W/m\262";
 
 // MISCELLANEOUS MESSAGES
 // Title Case

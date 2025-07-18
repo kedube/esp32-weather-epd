@@ -264,7 +264,6 @@ void powerOffDisplay()
  */
 void drawCurrentConditions(const owm_current_t &current,
                            const owm_daily_t &today,
-                           const owm_resp_air_pollution_t &owm_air_pollution,
                            float inTemp, float inHumidity)
 {
   String dataStr, unitStr;
@@ -275,17 +274,17 @@ void drawCurrentConditions(const owm_current_t &current,
 
   // current temp
 #ifdef UNITS_TEMP_KELVIN
-  dataStr = String(static_cast<int>(std::round(current.temp)));
+  dataStr = String(static_cast<int>(
+            std::round(celcius_to_kelvin(current.temp))));
   unitStr = TXT_UNITS_TEMP_KELVIN;
 #endif
 #ifdef UNITS_TEMP_CELSIUS
-  dataStr = String(static_cast<int>(
-            std::round(kelvin_to_celsius(current.temp))));
+  dataStr = String(static_cast<int>(std::round(current.temp)));
   unitStr = TXT_UNITS_TEMP_CELSIUS;
 #endif
 #ifdef UNITS_TEMP_FAHRENHEIT
   dataStr = String(static_cast<int>(
-            std::round(kelvin_to_fahrenheit(current.temp))));
+            std::round(celsius_to_fahrenheit(current.temp))));
   unitStr = TXT_UNITS_TEMP_FAHRENHEIT;
 #endif
   // FONT_**_temperature fonts only have the character set used for displaying
@@ -302,18 +301,18 @@ void drawCurrentConditions(const owm_current_t &current,
   // current feels like
 #ifdef UNITS_TEMP_KELVIN
   dataStr = String(TXT_FEELS_LIKE) + ' '
-            + String(static_cast<int>(std::round(current.feels_like)));
+            + String(static_cast<int>(std::round(
+              celsius_to_kelvin(current.feels_like))));
 #endif
 #ifdef UNITS_TEMP_CELSIUS
   dataStr = String(TXT_FEELS_LIKE) + ' '
-            + String(static_cast<int>(std::round(
-                     kelvin_to_celsius(current.feels_like))))
+            + String(static_cast<int>(std::round(current.feels_like)))
             + '\260';
 #endif
 #ifdef UNITS_TEMP_FAHRENHEIT
   dataStr = String(TXT_FEELS_LIKE) + ' '
             + String(static_cast<int>(std::round(
-                     kelvin_to_fahrenheit(current.feels_like))))
+                     celsius_to_fahrenheit(current.feels_like))))
             + '\260';
 #endif
   display.setFont(&FONT_12pt8b);
@@ -334,9 +333,9 @@ void drawCurrentConditions(const owm_current_t &current,
                              wi_day_sunny_48x48, 48, 48, GxEPD_BLACK);
 #ifndef DISP_BW_V1
   display.drawInvertedBitmap(0, 204 + (48 + 8) * 3,
-                             air_filter_48x48, 48, 48, GxEPD_BLACK);
+                             wi_hot_48x48, 48, 48, GxEPD_BLACK);
   display.drawInvertedBitmap(0, 204 + (48 + 8) * 4,
-                             house_thermometer_48x48, 48, 48, GxEPD_BLACK);
+                             wi_time_1_48x48, 48, 48, GxEPD_BLACK);
 #endif
   display.drawInvertedBitmap(170, 204 + (48 + 8) * 0,
                              wi_sunset_48x48, 48, 48, GxEPD_BLACK);
@@ -346,35 +345,31 @@ void drawCurrentConditions(const owm_current_t &current,
                              wi_barometer_48x48, 48, 48, GxEPD_BLACK);
 #ifndef DISP_BW_V1
   display.drawInvertedBitmap(170, 204 + (48 + 8) * 3,
-                             visibility_icon_48x48, 48, 48, GxEPD_BLACK);
+                             wi_lightning_48x48, 48, 48, GxEPD_BLACK);
   display.drawInvertedBitmap(170, 204 + (48 + 8) * 4,
-                             house_humidity_48x48, 48, 48, GxEPD_BLACK);
+                             wi_time_3_48x48, 48, 48, GxEPD_BLACK);
 #endif
 
   // current weather data labels
   display.setFont(&FONT_7pt8b);
   drawString(48, 204 + 10 + (48 + 8) * 0, TXT_SUNRISE, LEFT);
   drawString(48, 204 + 10 + (48 + 8) * 1, TXT_WIND, LEFT);
-  drawString(48, 204 + 10 + (48 + 8) * 2, TXT_UV_INDEX, LEFT);
+  #ifdef UNITS_SOLAR_RADIATION_UVI
+    drawString(48, 204 + 10 + (48 + 8) * 2, TXT_UV_INDEX, LEFT);
+  #endif
+  #ifdef UNITS_SOLAR_RADIATION_WM2
+    drawString(48, 204 + 10 + (48 + 8) * 2, TXT_SOLAR_RADIATION, LEFT);
+  #endif
 #ifndef DISP_BW_V1
-  const char *air_quality_index_label;
-  if (aqi_desc_type(AQI_SCALE) == AIR_QUALITY_DESC)
-  {
-    air_quality_index_label = TXT_AIR_QUALITY;
-  }
-  else // (aqi_desc_type(AQI_SCALE) == AIR_POLLUTION_DESC)
-  {
-    air_quality_index_label = TXT_AIR_POLLUTION;
-  }
-  drawString(48, 204 + 10 + (48 + 8) * 3, air_quality_index_label, LEFT);
-  drawString(48, 204 + 10 + (48 + 8) * 4, TXT_INDOOR_TEMPERATURE, LEFT);
+  drawString(48, 204 + 10 + (48 + 8) * 3, TXT_WBGT, LEFT);
+  drawString(48, 204 + 10 + (48 + 8) * 4, TXT_LIGHTNING_1HR, LEFT);
 #endif
   drawString(170 + 48, 204 + 10 + (48 + 8) * 0, TXT_SUNSET, LEFT);
   drawString(170 + 48, 204 + 10 + (48 + 8) * 1, TXT_HUMIDITY, LEFT);
   drawString(170 + 48, 204 + 10 + (48 + 8) * 2, TXT_PRESSURE, LEFT);
 #ifndef DISP_BW_V1
-  drawString(170 + 48, 204 + 10 + (48 + 8) * 3, TXT_VISIBILITY, LEFT);
-  drawString(170 + 48, 204 + 10 + (48 + 8) * 4, TXT_INDOOR_HUMIDITY, LEFT);
+  drawString(170 + 48, 204 + 10 + (48 + 8) * 3, TXT_LIGHTNING_DETECTED, LEFT);
+  drawString(170 + 48, 204 + 10 + (48 + 8) * 4, TXT_LIGHTNING_3HR, LEFT);
 #endif
 
   // sunrise
@@ -445,11 +440,12 @@ void drawCurrentConditions(const owm_current_t &current,
              dataStr, LEFT);
 #endif
 
-  // uv and air quality indices
+  // uv index and WBGT
   // spacing between end of index value and start of descriptor text
   const int sp = 8;
 
-  // uv index
+// uv index
+#ifdef UNITS_SOLAR_RADIATION_UVI
   display.setFont(&FONT_12pt8b);
   unsigned int uvi = static_cast<unsigned int>(
                                 std::max(std::round(current.uvi), 0.0f));
@@ -461,7 +457,7 @@ void drawCurrentConditions(const owm_current_t &current,
   if (getStringWidth(dataStr) <= max_w)
   { // Fits on a single line, draw along bottom
     drawString(display.getCursorX() + sp, 204 + 17 / 2 + (48 + 8) * 2 + 48 / 2,
-               dataStr, LEFT);
+                dataStr, LEFT);
   }
   else
   { // use smaller font
@@ -469,8 +465,8 @@ void drawCurrentConditions(const owm_current_t &current,
     if (getStringWidth(dataStr) <= max_w)
     { // Fits on a single line with smaller font, draw along bottom
       drawString(display.getCursorX() + sp,
-                 204 + 17 / 2 + (48 + 8) * 2 + 48 / 2,
-                 dataStr, LEFT);
+                  204 + 17 / 2 + (48 + 8) * 2 + 48 / 2,
+                  dataStr, LEFT);
     }
     else
     { // Does not fit on a single line, draw higher to allow room for 2nd line
@@ -479,27 +475,48 @@ void drawCurrentConditions(const owm_current_t &current,
                         dataStr, LEFT, max_w, 2, 10);
     }
   }
+#endif
+
+#ifdef UNITS_SOLAR_RADIATION_WM2
+  display.setFont(&FONT_12pt8b);
+  dataStr = String(std::round(current.solar_radiation), 0);
+  unitStr = String(" ") + TXT_UNITS_SOLAR_RADIATION_WATTS_METERSQUARED;
+  drawString(48, 204 + 17 / 2 + (48 + 8) * 2 + 48 / 2, dataStr, LEFT);
+  display.setFont(&FONT_8pt8b);
+  drawString(display.getCursorX(), 204 + 17 / 2 + (48 + 8) * 2 + 48 / 2,
+             unitStr, LEFT);
+#endif
+
 
 #ifndef DISP_BW_V1
-  // air quality index
+  // WBGT
   display.setFont(&FONT_12pt8b);
-  const owm_components_t &c = owm_air_pollution.components;
-  // OpenWeatherMap does not provide pb (lead) conentrations, so we pass NULL.
-  int aqi = calc_aqi(AQI_SCALE, c.co, c.nh3, c.no, c.no2, c.o3, NULL, c.so2,
-                                c.pm10, c.pm2_5);
-  int aqi_max = aqi_scale_max(AQI_SCALE);
-  if (aqi > aqi_max)
-  {
-    dataStr = "> " + String(aqi_max);
-  }
-  else
-  {
-    dataStr = String(aqi);
-  }
+  #ifdef UNITS_TEMP_KELVIN
+    dataStr = String(static_cast<int>(
+              std::round(celcius_to_kelvin(current.wbgt))));
+    unitStr = TXT_UNITS_TEMP_KELVIN;
+  #endif
+  #ifdef UNITS_TEMP_CELSIUS
+    dataStr = String(static_cast<int>(std::round(current.wbgt)));
+    unitStr = TXT_UNITS_TEMP_CELSIUS;
+  #endif
+  #ifdef UNITS_TEMP_FAHRENHEIT
+    dataStr = String(static_cast<int>(
+              std::round(celsius_to_fahrenheit(current.wbgt))));
+    unitStr = TXT_UNITS_TEMP_FAHRENHEIT;
+  #endif
+  #if defined(UNITS_TEMP_CELSIUS) || defined(UNITS_TEMP_FAHRENHEIT)
+  dataStr += "\260";
+  #endif
+  #ifdef unitStr
+  dataStr += unitstr;
+  #endif
   drawString(48, 204 + 17 / 2 + (48 + 8) * 3 + 48 / 2, dataStr, LEFT);
   display.setFont(&FONT_7pt8b);
-  dataStr = String(aqi_desc(AQI_SCALE, aqi));
-  max_w = 170 - (display.getCursorX() + sp);
+  
+  
+  dataStr = String(getWBGTdesc(celsius_to_fahrenheit(current.wbgt))); // Scale based on F
+  int max_w = 170 - (display.getCursorX() + sp);
   if (getStringWidth(dataStr) <= max_w)
   { // Fits on a single line, draw along bottom
     drawString(display.getCursorX() + sp, 204 + 17 / 2 + (48 + 8) * 3 + 48 / 2,
@@ -522,40 +539,25 @@ void drawCurrentConditions(const owm_current_t &current,
     }
   }
 
-  // indoor temperature
+  // Lightning 1HR
   display.setFont(&FONT_12pt8b);
-  if (!std::isnan(inTemp))
-  {
-#ifdef UNITS_TEMP_KELVIN
-    dataStr = String(std::round(celsius_to_kelvin(inTemp) * 10) / 10.0f, 1);
-#endif
-#ifdef UNITS_TEMP_CELSIUS
-    dataStr = String(std::round(inTemp * 10) / 10.0f, 1);
-#endif
-#ifdef UNITS_TEMP_FAHRENHEIT
-    dataStr = String(static_cast<int>(
-              std::round(celsius_to_fahrenheit(inTemp))));
-#endif
-  }
-  else
-  {
-    dataStr = "--";
-  }
-#if defined(UNITS_TEMP_CELSIUS) || defined(UNITS_TEMP_FAHRENHEIT)
-  dataStr += "\260";
-#endif
-  drawString(48, 204 + 17 / 2 + (48 + 8) * 4 + 48 / 2, dataStr, LEFT);
-#endif // defined(DISP_BW_V2) || defined(DISP_3C_B) || defined(DISP_7C_F)
+  drawString(48, 204 + 17 / 2 + (48 + 8) * 4 + 48 / 2, String(current.ltg_1hr), LEFT);
+  display.setFont(&FONT_6pt8b);
+  drawString(display.getCursorX(), 204 + 17 / 2 + (48 + 8) * 4 + 48 / 2,
+             "strikes", LEFT);
+  #endif // defined(DISP_BW_V2) || defined(DISP_3C_B) || defined(DISP_7C_F)
 
   // sunset
   memset(timeBuffer, '\0', sizeof(timeBuffer));
   ts = current.sunset;
   timeInfo = localtime(&ts);
+  display.setFont(&FONT_12pt8b);
   _strftime(timeBuffer, sizeof(timeBuffer), TIME_FORMAT, timeInfo);
   drawString(170 + 48, 204 + 17 / 2 + (48 + 8) * 0 + 48 / 2, timeBuffer, LEFT);
 
   // humidity
   dataStr = String(current.humidity);
+  display.setFont(&FONT_12pt8b);
   drawString(170 + 48, 204 + 17 / 2 + (48 + 8) * 1 + 48 / 2, dataStr, LEFT);
   display.setFont(&FONT_8pt8b);
   drawString(display.getCursorX(), 204 + 17 / 2 + (48 + 8) * 1 + 48 / 2,
@@ -612,55 +614,23 @@ void drawCurrentConditions(const owm_current_t &current,
              unitStr, LEFT);
 
 #ifndef DISP_BW_V1
-  // visibility
+  // Lightning Detected
   display.setFont(&FONT_12pt8b);
-#ifdef UNITS_DIST_KILOMETERS
-  float vis = meters_to_kilometers(current.visibility);
-  unitStr = String(" ") + TXT_UNITS_DIST_KILOMETERS;
-#endif
-#ifdef UNITS_DIST_MILES
-  float vis = meters_to_miles(current.visibility);
-  unitStr = String(" ") + TXT_UNITS_DIST_MILES;
-#endif
-  // if visibility is less than 1.95, round to 1 decimal place
-  // else round to int
-  if (vis < 1.95)
-  {
-    dataStr = String(std::round(10 * vis) / 10.0, 1);
+  if (current.ltg_1hr != 0 ) {
+    dataStr = "Detected!";
+  } else {
+    dataStr = "All Clear";
   }
-  else
-  {
-    dataStr = String(static_cast<int>(std::round(vis)));
-  }
-#ifdef UNITS_DIST_KILOMETERS
-  if (vis >= 10)
-  {
-#endif
-#ifdef UNITS_DIST_MILES
-  if (vis >= 6)
-  {
-#endif
-    dataStr = "> " + dataStr;
-  }
-  drawString(170 + 48, 204 + 17 / 2 + (48 + 8) * 3 + 48 / 2, dataStr, LEFT);
-  display.setFont(&FONT_8pt8b);
-  drawString(display.getCursorX(), 204 + 17 / 2 + (48 + 8) * 3 + 48 / 2,
-             unitStr, LEFT);
 
-  // indoor humidity
+  drawString(170 + 48, 204 + 17 / 2 + (48 + 8) * 3 + 48 / 2, dataStr, LEFT);
+  
+
+  // Lightning 3HR
   display.setFont(&FONT_12pt8b);
-  if (!std::isnan(inHumidity))
-  {
-    dataStr = String(static_cast<int>(std::round(inHumidity)));
-  }
-  else
-  {
-    dataStr = "--";
-  }
-  drawString(170 + 48, 204 + 17 / 2 + (48 + 8) * 4 + 48 / 2, dataStr, LEFT);
-  display.setFont(&FONT_8pt8b);
+  drawString(170 + 48, 204 + 17 / 2 + (48 + 8) * 4 + 48 / 2, String(current.ltg_3hr), LEFT);
+  display.setFont(&FONT_6pt8b);
   drawString(display.getCursorX(), 204 + 17 / 2 + (48 + 8) * 4 + 48 / 2,
-             "%", LEFT);
+             "strikes", LEFT);
 #endif // defined(DISP_BW_V2) || defined(DISP_3C_B) || defined(DISP_7C_F)
   return;
 } // end drawCurrentConditions
@@ -694,23 +664,25 @@ void drawForecast(const owm_daily_t *daily, tm timeInfo)
     display.setFont(&FONT_8pt8b);
     drawString(x + 31, 98 + 69 / 2 + 38 - 6 + 12, "|", CENTER);
 #ifdef UNITS_TEMP_KELVIN
-    hiStr = String(static_cast<int>(std::round(daily[i].temp.max)));
-    loStr = String(static_cast<int>(std::round(daily[i].temp.min)));
+    hiStr = String(static_cast<int>(
+                std::round(celcius_to_kelvin(daily[i].temp.max))));
+    loStr = String(static_cast<int>(
+                std::round(celcius_to_kelvin(daily[i].temp.min))));
 #endif
 #ifdef UNITS_TEMP_CELSIUS
     hiStr = String(static_cast<int>(
-                std::round(kelvin_to_celsius(daily[i].temp.max)))) +
+                std::round(daily[i].temp.max))) +
             "\260";
     loStr = String(static_cast<int>(
-                std::round(kelvin_to_celsius(daily[i].temp.min)))) +
+                std::round(daily[i].temp.min))) +
             "\260";
 #endif
 #ifdef UNITS_TEMP_FAHRENHEIT
     hiStr = String(static_cast<int>(
-                std::round(kelvin_to_fahrenheit(daily[i].temp.max)))) +
+                std::round(celsius_to_fahrenheit(daily[i].temp.max)))) +
             "\260";
     loStr = String(static_cast<int>(
-                std::round(kelvin_to_fahrenheit(daily[i].temp.min)))) +
+                std::round(celsius_to_fahrenheit(daily[i].temp.min)))) +
             "\260";
 #endif
     drawString(x + 31 - 4, 98 + 69 / 2 + 38 - 6 + 12, hiStr, RIGHT);
@@ -724,7 +696,7 @@ void drawForecast(const owm_daily_t *daily, tm timeInfo)
     dataStr = String(static_cast<int>(dailyPrecip));
     unitStr = "%";
 #else
-    dailyPrecip = daily[i].snow + daily[i].rain;
+    dailyPrecip = 0;
 #if defined(UNITS_DAILY_PRECIP_MILLIMETERS)
     // Round up to nearest mm
     dailyPrecip = std::round(dailyPrecip);
@@ -896,22 +868,22 @@ inline int modulo(int a, int b)
   return result >= 0 ? result : result + b;
 }
 
-/* Convert temperature in kelvin to the display y coordinate to be plotted.
+/* Convert temperature in celcius to the display y coordinate to be plotted.
  */
-int kelvin_to_plot_y(float kelvin, int tempBoundMin, float yPxPerUnit,
+int kelvin_to_plot_y(float celcius, int tempBoundMin, float yPxPerUnit,
                      int yBoundMin)
 {
 #ifdef UNITS_TEMP_KELVIN
   return static_cast<int>(std::round(
-    yBoundMin - (yPxPerUnit * (kelvin - tempBoundMin)) ));
+    yBoundMin - (yPxPerUnit * (celcius_to_kelvin(celcius) - tempBoundMin)) ));
 #endif
 #ifdef UNITS_TEMP_CELSIUS
   return static_cast<int>(std::round(
-    yBoundMin - (yPxPerUnit * (kelvin_to_celsius(kelvin) - tempBoundMin)) ));
+    yBoundMin - (yPxPerUnit * (celcius - tempBoundMin)) ));
 #endif
 #ifdef UNITS_TEMP_FAHRENHEIT
   return static_cast<int>(std::round(
-    yBoundMin - (yPxPerUnit * (kelvin_to_fahrenheit(kelvin) - tempBoundMin)) ));
+    yBoundMin - (yPxPerUnit * (celsius_to_fahrenheit(celcius) - tempBoundMin)) ));
 #endif
 }
 
@@ -929,13 +901,13 @@ void drawOutlookGraph(const owm_hourly_t *hourly, const owm_daily_t *daily,
   // calculate y max/min and intervals
   int yMajorTicks = 5;
 #ifdef UNITS_TEMP_KELVIN
-  float tempMin = hourly[0].temp;
+  float tempMin = celcius_to_kelvin(hourly[0].temp);
 #endif
 #ifdef UNITS_TEMP_CELSIUS
-  float tempMin = kelvin_to_celsius(hourly[0].temp);
+  float tempMin = hourly[0].temp;
 #endif
 #ifdef UNITS_TEMP_FAHRENHEIT
-  float tempMin = kelvin_to_fahrenheit(hourly[0].temp);
+  float tempMin = celsius_to_fahrenheit(hourly[0].temp);
 #endif
   float tempMax = tempMin;
 #ifdef UNITS_HOURLY_PRECIP_POP
@@ -948,13 +920,13 @@ void drawOutlookGraph(const owm_hourly_t *hourly, const owm_daily_t *daily,
   for (int i = 1; i < HOURLY_GRAPH_MAX; ++i)
   {
 #ifdef UNITS_TEMP_KELVIN
-    newTemp = hourly[i].temp;
+    newTemp = celcius_to_kelvin(hourly[i].temp);
 #endif
 #ifdef UNITS_TEMP_CELSIUS
-    newTemp = kelvin_to_celsius(hourly[i].temp);
+    newTemp = hourly[i].temp;
 #endif
 #ifdef UNITS_TEMP_FAHRENHEIT
-    newTemp = kelvin_to_fahrenheit(hourly[i].temp);
+    newTemp = celsius_to_fahrenheit(hourly[i].temp);
 #endif
     tempMin = std::min(tempMin, newTemp);
     tempMax = std::max(tempMax, newTemp);
@@ -1189,8 +1161,7 @@ void drawOutlookGraph(const owm_hourly_t *hourly, const owm_daily_t *daily,
         {
           y_b = std::min(y_t[idx], y_b);
         }
-        const uint8_t *bitmap = getHourlyForecastBitmap32(hourly[i],
-                                                          daily[day_idx]);
+        const uint8_t *bitmap = getHourlyForecastBitmap32(hourly[i]);
         display.drawInvertedBitmap(xTick - 16, y_b - 32,
                                    bitmap, 32, 32, GxEPD_BLACK);
       }

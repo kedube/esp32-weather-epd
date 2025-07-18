@@ -48,12 +48,15 @@ extern const char *TXT_SUNSET;
 extern const char *TXT_WIND;
 extern const char *TXT_HUMIDITY;
 extern const char *TXT_UV_INDEX;
+extern const char *TXT_SOLAR_RADIATION;
 extern const char *TXT_PRESSURE;
-extern const char *TXT_AIR_QUALITY;
-extern const char *TXT_AIR_POLLUTION;
-extern const char *TXT_VISIBILITY;
+extern const char *TXT_WBGT;
+extern const char *TXT_LIGHTNING_1HR;
+extern const char *TXT_LIGHTNING_3HR;
+extern const char *TXT_LIGHTNING_DETECTED;
 extern const char *TXT_INDOOR_TEMPERATURE;
 extern const char *TXT_INDOOR_HUMIDITY;
+extern const char *TXT_DEW_POINT;
 
 // UV INDEX
 extern const char *TXT_UV_LOW;
@@ -61,6 +64,13 @@ extern const char *TXT_UV_MODERATE;
 extern const char *TXT_UV_HIGH;
 extern const char *TXT_UV_VERY_HIGH;
 extern const char *TXT_UV_EXTREME;
+
+// WBGT 
+extern const char *TXT_WBGT_NORISK;
+extern const char *TXT_WBGT_LOWRISK;
+extern const char *TXT_WBGT_MODRISK;
+extern const char *TXT_WBGT_HGIHRISK;
+extern const char *TXT_WBGT_EXTREMERISK;
 
 // WIFI
 extern const char *TXT_WIFI_EXCELLENT;
@@ -96,6 +106,9 @@ extern const char *TXT_UNITS_DIST_MILES;
 extern const char *TXT_UNITS_PRECIP_MILLIMETERS;
 extern const char *TXT_UNITS_PRECIP_CENTIMETERS;
 extern const char *TXT_UNITS_PRECIP_INCHES;
+
+extern const char *TXT_UNITS_SOLAR_RADIATION_WATTS_METERSQUARED;
+
 
 // MISCELLANEOUS MESSAGES
 // Title Case

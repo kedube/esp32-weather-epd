@@ -24,6 +24,11 @@ float kelvin_to_celsius(float kelvin)
   return kelvin - 273.15f;
 } // end kelvin_to_celsius
 
+float celcius_to_kelvin(float celcius)
+{
+  return celcius + 273.15f;
+}
+
 float kelvin_to_fahrenheit(float kelvin)
 {
   return kelvin * (9.f / 5.f) - 459.67f;

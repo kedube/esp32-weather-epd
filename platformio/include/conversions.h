@@ -19,6 +19,7 @@
 #define __CONVERSIONS_H__
 
 float kelvin_to_celsius(float kelvin);
+float celcius_to_kelvin(float celcius);
 float kelvin_to_fahrenheit(float kelvin);
 float celsius_to_kelvin(float celsius);
 float celsius_to_fahrenheit(float celsius);

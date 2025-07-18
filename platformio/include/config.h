@@ -100,8 +100,8 @@
 // #define UNITS_PRES_HECTOPASCALS
 // #define UNITS_PRES_PASCALS
 // #define UNITS_PRES_MILLIMETERSOFMERCURY
-#define UNITS_PRES_INCHESOFMERCURY
-// #define UNITS_PRES_MILLIBARS
+// #define UNITS_PRES_INCHESOFMERCURY
+#define UNITS_PRES_MILLIBARS
 // #define UNITS_PRES_ATMOSPHERES
 // #define UNITS_PRES_GRAMSPERSQUARECENTIMETER
 // #define UNITS_PRES_POUNDSPERSQUAREINCH
@@ -111,6 +111,11 @@
 //   Imperial : Miles
 // #define UNITS_DIST_KILOMETERS
 #define UNITS_DIST_MILES
+
+// Solar Radiation
+// Show UV Index or Raw value
+// #define UNITS_SOLAR_RADIATION_UVI
+#define UNITS_SOLAR_RADIATION_WM2
 
 // UNITS - PRECIPITATION (HOURLY)
 // Measure of precipitation.
@@ -127,10 +132,11 @@
 // This can either be Probability of Precipitation (PoP) or daily volume.
 //   Metric   : Millimeters
 //   Imperial : Inches
-// #define UNITS_DAILY_PRECIP_POP
+#define UNITS_DAILY_PRECIP_POP
+// the following are not applicable for Tempest
 // #define UNITS_DAILY_PRECIP_MILLIMETERS
 // #define UNITS_DAILY_PRECIP_CENTIMETERS
-#define UNITS_DAILY_PRECIP_INCHES
+// #define UNITS_DAILY_PRECIP_INCHES
 
 // Hypertext Transfer Protocol (HTTP)
 // HTTP
@@ -165,11 +171,11 @@
 //   Intercardinal (Ordinal)    8  ±22.500°   NE
 //   Secondary Intercardinal   16  ±11.250°   NNE
 //   Tertiary Intercardinal    32   ±5.625°   NbE
-#define WIND_INDICATOR_ARROW
+// #define WIND_INDICATOR_ARROW
 // #define WIND_INDICATOR_NUMBER
 // #define WIND_INDICATOR_CPN_CARDINAL
 // #define WIND_INDICATOR_CPN_INTERCARDINAL
-// #define WIND_INDICATOR_CPN_SECONDARY_INTERCARDINAL
+#define WIND_INDICATOR_CPN_SECONDARY_INTERCARDINAL
 // #define WIND_INDICATOR_CPN_TERTIARY_INTERCARDINAL
 // #define WIND_INDICATOR_NONE
 
@@ -230,7 +236,7 @@
 //   0 : Disable (hide always)
 //   1 : Enable (show always)
 //   2 : Smart (show only when precipitation is forecasted)
-#define DISPLAY_DAILY_PRECIP 2
+#define DISPLAY_DAILY_PRECIP 1
 
 // HOURLY WEATHER ICONS
 // Weather icons to be displayed on the temperature and precipitation chart.
@@ -252,13 +258,13 @@
 //   Extra information that can be displayed on the status bar. Set to 1 to
 //   enable.
 #define STATUS_BAR_EXTRAS_BAT_VOLTAGE 0
-#define STATUS_BAR_EXTRAS_WIFI_RSSI   0
+#define STATUS_BAR_EXTRAS_WIFI_RSSI   1
 
 // BATTERY MONITORING
 //   You may choose to power your weather display with or without a battery.
 //   Low power behavior can be controlled in config.cpp.
 //   If you wish to disable battery monitoring set this macro to 0.
-#define BATTERY_MONITORING 1
+#define BATTERY_MONITORING 0
 
 // NON-VOLATILE STORAGE (NVS) NAMESPACE
 #define NVS_NAMESPACE "weather_epd"
@@ -268,7 +274,7 @@
 //   level 0: basic status information, assists troubleshooting (default)
 //   level 1: increased verbosity for debugging
 //   level 2: print api responses to serial monitor
-#define DEBUG_LEVEL 0
+#define DEBUG_LEVEL 1
 
 // Set the below constants in "config.cpp"
 extern const uint8_t PIN_BAT_ADC;
@@ -288,9 +294,9 @@ extern const char *WIFI_SSID;
 extern const char *WIFI_PASSWORD;
 extern const unsigned long WIFI_TIMEOUT;
 extern const unsigned HTTP_CLIENT_TCP_TIMEOUT;
-extern const String OWM_APIKEY;
-extern const String OWM_ENDPOINT;
-extern const String OWM_ONECALL_VERSION;
+extern const String TEMPEST_APIKEY;
+extern const String TEMPEST_STATIONID;
+extern const String TEMPEST_ENDPOINT;
 extern const String LAT;
 extern const String LON;
 extern const String CITY_STRING;

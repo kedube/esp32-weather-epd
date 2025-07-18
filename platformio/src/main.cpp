@@ -46,7 +46,6 @@
 
 // too large to allocate locally on stack
 static owm_resp_onecall_t       owm_onecall;
-static owm_resp_air_pollution_t owm_air_pollution;
 
 Preferences prefs;
 
@@ -257,36 +256,22 @@ void setup()
   client.setInsecure();
 #elif defined(USE_HTTPS_WITH_CERT_VERIF)
   WiFiClientSecure client;
-  client.setCACert(cert_Sectigo_RSA_Organization_Validation_Secure_Server_CA);
+  client.setCACert(cert_Amazon_RSA_2048_M02);
 #endif
   int rxStatus = getOWMonecall(client, owm_onecall);
   if (rxStatus != HTTP_CODE_OK)
   {
-    killWiFi();
-    statusStr = "One Call " + OWM_ONECALL_VERSION + " API";
-    tmpStr = String(rxStatus, DEC) + ": " + getHttpResponsePhrase(rxStatus);
-    initDisplay();
-    do
-    {
-      drawError(wi_cloud_down_196x196, statusStr, tmpStr);
-    } while (display.nextPage());
-    powerOffDisplay();
-    beginDeepSleep(startTime, &timeInfo);
-  }
-  rxStatus = getOWMairpollution(client, owm_air_pollution);
-  if (rxStatus != HTTP_CODE_OK)
-  {
-    killWiFi();
-    statusStr = "Air Pollution API";
-    tmpStr = String(rxStatus, DEC) + ": " + getHttpResponsePhrase(rxStatus);
-    initDisplay();
-    do
-    {
-      drawError(wi_cloud_down_196x196, statusStr, tmpStr);
-    } while (display.nextPage());
-    powerOffDisplay();
-    beginDeepSleep(startTime, &timeInfo);
-  }
+        killWiFi();
+        statusStr = "Tempest Better Forecast API";
+        tmpStr = String(rxStatus, DEC) + ": " + getHttpResponsePhrase(rxStatus);
+        initDisplay();
+        do
+        {
+          drawError(wi_cloud_down_196x196, statusStr, tmpStr);
+        } while (display.nextPage());
+        powerOffDisplay();
+        beginDeepSleep(startTime, &timeInfo);
+      }
   killWiFi(); // WiFi no longer needed
 
   // GET INDOOR TEMPERATURE AND HUMIDITY, start BMEx80...
@@ -344,7 +329,7 @@ void setup()
   do
   {
     drawCurrentConditions(owm_onecall.current, owm_onecall.daily[0],
-                          owm_air_pollution, inTemp, inHumidity);
+                          inTemp, inHumidity);
     drawOutlookGraph(owm_onecall.hourly, owm_onecall.daily, timeInfo);
     drawForecast(owm_onecall.daily, timeInfo);
     drawLocationDate(CITY_STRING, dateStr);
