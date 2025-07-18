@@ -69,17 +69,17 @@ const char *TXT_FEELS_LIKE         = "Feels Like";
 const char *TXT_SUNRISE            = "Sunrise";
 const char *TXT_SUNSET             = "Sunset";
 const char *TXT_WIND               = "Wind";
+const char *TXT_WIND_GUST          = "Gusts";
 const char *TXT_HUMIDITY           = "Humidity";
 const char *TXT_UV_INDEX           = "UV Index";
 const char *TXT_SOLAR_RADIATION    = "Solar Radiation";
 const char *TXT_PRESSURE           = "Pressure";
 const char *TXT_WBGT               = "WBGT";
-const char *TXT_LIGHTNING_1HR      = "Strikes 1hr";
-const char *TXT_LIGHTNING_3HR      = "Strikes 3hr";
-const char *TXT_LIGHTNING_DETECTED = "Lightning";
+const char *TXT_LIGHTNING          = "Lightning";
 const char *TXT_INDOOR_TEMPERATURE = "Temperature";
 const char *TXT_INDOOR_HUMIDITY    = "Humidity";
 const char *TXT_DEW_POINT          = "Dew Point";
+const char *TXT_TODAY_RAIN         = "Today's Rain";
 
 // UV INDEX
 const char *TXT_UV_LOW       = "Low";

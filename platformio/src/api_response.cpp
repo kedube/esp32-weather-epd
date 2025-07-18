@@ -54,14 +54,14 @@ DeserializationError deserializeTempestCall(Stream &json,
   r.current.wind_speed = current["wind_avg"].as<float>(); // default m/s
   r.current.wind_gust  = current["wind_gust"] .as<float>(); // default m/s
   r.current.wind_deg   = current["wind_direction"]  .as<int>();
-  r.current.rain_1h    = current["precip_accum_local_day"].as<float>();
+  r.current.rain_day    = current["precip_accum_local_day"].as<float>();
   r.current.sunrise    = doc["forecast"]["daily"][0]["sunrise"].as<int64_t>();
   r.current.sunset     = doc["forecast"]["daily"][0]["sunset"].as<int64_t>();
   r.current.weather.description = current["conditions"].as<const char *>();
   r.current.weather.icon        = current["icon"]       .as<const char *>();
   r.current.wbgt = current["wet_bulb_globe_temperature"].as<float>();
-  r.current.ltg_1hr = current["lightning_strike_count_last_1hr"].as<int>();
-  r.current.ltg_3hr = current["lightning_strike_count_last_3hr"].as<int>();
+  r.current.last_strike_time = current["lightning_strike_last_epoch"].as<int64_t>();
+
   i = 0;
   for (JsonObject hourly : doc["forecast"]["hourly"].as<JsonArray>())
   {

@@ -42,17 +42,17 @@ extern const char *TXT_FEELS_LIKE;
 extern const char *TXT_SUNRISE;
 extern const char *TXT_SUNSET;
 extern const char *TXT_WIND;
+extern const char *TXT_WIND_GUST;
 extern const char *TXT_HUMIDITY;
 extern const char *TXT_UV_INDEX;
 extern const char *TXT_SOLAR_RADIATION;
 extern const char *TXT_PRESSURE;
 extern const char *TXT_WBGT;
-extern const char *TXT_LIGHTNING_1HR;
-extern const char *TXT_LIGHTNING_3HR;
-extern const char *TXT_LIGHTNING_DETECTED;
+extern const char *TXT_LIGHTNING;
 extern const char *TXT_INDOOR_TEMPERATURE;
 extern const char *TXT_INDOOR_HUMIDITY;
 extern const char *TXT_DEW_POINT;
+extern const char *TXT_TODAY_RAIN;
 
 // UV INDEX
 extern const char *TXT_UV_LOW;

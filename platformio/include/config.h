@@ -104,6 +104,11 @@
 // #define UNITS_DIST_KILOMETERS
 #define UNITS_DIST_MILES
 
+// UNIUTS -- RAINFALL
+#define UNITS_RAINFALL_INCHES
+// #define UNITS_RAINFALL_MM
+// #define UNITS_RAINFALL_CM
+
 // Solar Radiation
 // Show UV Index or Raw value
 // #define UNITS_SOLAR_RADIATION_UVI

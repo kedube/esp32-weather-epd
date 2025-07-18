@@ -63,10 +63,9 @@ typedef struct wx_current
   float   wind_speed;       // Wind speed. Wind speed. Units – default: metre/sec,
   float   wind_gust;        // (where available) Wind gust. Units – default: metre/sec
   int     wind_deg;         // Wind direction, degrees (meteorological)
-  float   rain_1h;          // (where available) Rain volume for last hour, mm
+  float   rain_day;          // (where available) Rain volume for local day, mm
   float   wbgt;             // Wetbulb Globe Temp, Celsius
-  int     ltg_3hr;          // Number Lightning Strikes 3hr
-  int     ltg_1hr;          // Number Lightning Strikes 1hr
+  int64_t last_strike_time;
   weather_condition_t         weather;
 } wx_current_t;
 
