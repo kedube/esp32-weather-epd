@@ -21,8 +21,6 @@
 #include <driver/adc.h>
 #include <esp_adc_cal.h>
 
-#include <aqi.h>
-
 #include "_locale.h"
 #include "_strftime.h"
 #include "api_response.h"
@@ -285,39 +283,12 @@ int eventUrgency(const String &event)
  * Truncate Extraneous Info (anything that follows a comma, period, or open
  *   parentheses)
  */
-void filterAlerts(std::vector<owm_alerts_t> &resp, int *ignore_list)
+void filterAlerts(std::vector<wx_alerts_t> &resp, int *ignore_list)
 {
   // Convert all event text and tags to lowercase.
   for (auto &alert : resp)
   {
     alert.event.toLowerCase();
-    alert.tags.toLowerCase();
-  }
-
-  // Deduplicate alerts with the same first tag. Keeping only the most urgent
-  // alerts of each tag and alerts who's urgency cannot be determined.
-  for (int i = 0; i < resp.size(); ++i)
-  {
-    if (ignore_list[i] == 1)
-    {
-      continue;
-    }
-    if (resp[i].tags.isEmpty())
-    {
-      continue; // urgency can not be determined so it remains in the list
-    }
-
-    for (int j = 0; j < resp.size(); ++j)
-    {
-      if (i != j && resp[i].tags == resp[j].tags)
-      {
-        // comparing alerts of the same tag, removing the less urgent alert
-        if (eventUrgency(resp[i].event) >= eventUrgency(resp[j].event))
-        {
-          ignore_list[j] = 1;
-        }
-      }
-    }
   }
 
   // Save only the 2 most recent alerts
@@ -438,59 +409,9 @@ const uint8_t *getWiFiBitmap16(int rssi)
   }
 } // end getWiFiBitmap24
 
-/* Returns true if icon is a daytime icon, false otherwise.
- */
-bool isDay(String icon) 
-{
-  // OpenWeatherMap indicates sun is up with d otherwise n for night
-  return icon.endsWith("d");
-}
-
-/* Returns true if the moon is currently in the sky above, false otherwise.
- */
-bool isMoonInSky(int64_t current_dt, int64_t moonrise_dt, int64_t moonset_dt,
-                 float moon_phase)
-{
-  // (moon is out if current time is after moonrise but before moonset
-  //   OR if moonrises after moonset and the current time is after moonrise)
-  // AND (moon phase is not a new moon)
-  return ((current_dt >= moonrise_dt && current_dt < moonset_dt)
-          || (moonrise_dt > moonset_dt && current_dt >= moonrise_dt))
-         && (moon_phase != 0.f && moon_phase != 1.f);
-}
-
-/* Takes cloudiness (%) and returns true if it is at least partially cloudy,
- * false otherwise.
- *
- * References:
- *   https://www.weather.gov/ajk/ForecastTerms
- */
-bool isCloudy(int clouds) {
-  return clouds > 60.25; // partly cloudy / partly sunny
-}
-
-/* Takes wind speed and wind gust speed and returns true if it is windy, false
- * otherwise.
- *
- * References:
- *   https://www.weather.gov/ajk/ForecastTerms
- */
-bool isWindy(float wind_speed, float wind_gust) {
- return (wind_speed >= 32.2 /*m/s*/
-      || wind_gust  >= 40.2 /*m/s*/);
-}
-
-/* Takes the current weather and today's daily weather forcast (from
- * OpenWeatherMap API response) and returns a pointer to the icon's 196x196
+/* Takes the current weather and today's daily weather forcast
+ * and returns a pointer to the icon's 196x196
  * bitmap.
- *
- * Uses multiple factors to return more detailed icons than the simple icon
- * catagories that OpenWeatherMap provides.
- *
- * Last Updated: June 26, 2022
- *
- * References:
- *   https://openweathermap.org/weather-conditions
  */
 template <int BitmapSize>
 const uint8_t *getConditionsBitmap(const String& icon)
@@ -542,7 +463,7 @@ const uint8_t *getConditionsBitmap(const String& icon)
 /* Takes the daily weather forecast (from OpenWeatherMap API response) and
  * returns a pointer to the icon's 32x32 bitmap.
  */
-const uint8_t *getHourlyForecastBitmap32(const owm_hourly_t &hourly)
+const uint8_t *getHourlyForecastBitmap32(const wx_hourly_t &hourly)
 {
   return getConditionsBitmap<32>(hourly.weather.icon);
 }
@@ -550,7 +471,7 @@ const uint8_t *getHourlyForecastBitmap32(const owm_hourly_t &hourly)
 /* Takes the daily weather forecast (from OpenWeatherMap API response) and
  * returns a pointer to the icon's 64x64 bitmap.
  */
-const uint8_t *getDailyForecastBitmap64(const owm_daily_t &daily)
+const uint8_t *getDailyForecastBitmap64(const wx_daily_t &daily)
 {
   return getConditionsBitmap<64>(daily.weather.icon);
 } // end getForecastBitmap64
@@ -561,8 +482,8 @@ const uint8_t *getDailyForecastBitmap64(const owm_daily_t &daily)
  * 
  * The daily weather forcast of today is needed for moonrise and moonset times.
  */
-const uint8_t *getCurrentConditionsBitmap196(const owm_current_t &current,
-                                             const owm_daily_t   &today)
+const uint8_t *getCurrentConditionsBitmap196(const wx_current_t &current,
+                                             const wx_daily_t   &today)
 {
   return getConditionsBitmap<196>(current.weather.icon);
 } // end getCurrentConditionsBitmap196
@@ -575,7 +496,7 @@ const uint8_t *getCurrentConditionsBitmap196(const owm_current_t &current,
  * If a relevant category can not be determined, the default alert bitmap will
  * be returned. (warning triangle icon)
  */
-const uint8_t *getAlertBitmap32(const owm_alerts_t &alert)
+const uint8_t *getAlertBitmap32(const wx_alerts_t &alert)
 {
   enum alert_category c = getAlertCategory(alert);
   switch (c)
@@ -621,7 +542,7 @@ const uint8_t *getAlertBitmap32(const owm_alerts_t &alert)
  * If a relevant category can not be determined, the default alert bitmap will
  * be returned. (warning triangle icon)
  */
-const uint8_t *getAlertBitmap48(const owm_alerts_t &alert)
+const uint8_t *getAlertBitmap48(const wx_alerts_t &alert)
 {
   enum alert_category c = getAlertCategory(alert);
   switch (c)
@@ -681,7 +602,7 @@ bool containsTerminology(const String s, const std::vector<String> &terminology)
  *
  * Weather alert terminology is defined in the included locale header.
  */
-enum alert_category getAlertCategory(const owm_alerts_t &alert)
+enum alert_category getAlertCategory(const wx_alerts_t &alert)
 {
   if (containsTerminology(alert.event, TERM_SMOG))
   {

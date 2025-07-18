@@ -262,9 +262,8 @@ void powerOffDisplay()
 /* This function is responsible for drawing the current conditions and
  * associated icons.
  */
-void drawCurrentConditions(const owm_current_t &current,
-                           const owm_daily_t &today,
-                           float inTemp, float inHumidity)
+void drawCurrentConditions(const wx_current_t &current,
+                           const wx_daily_t &today)
 {
   String dataStr, unitStr;
   // current weather icon
@@ -637,7 +636,7 @@ void drawCurrentConditions(const owm_current_t &current,
 
 /* This function is responsible for drawing the five day forecast.
  */
-void drawForecast(const owm_daily_t *daily, tm timeInfo)
+void drawForecast(const wx_daily_t *daily, tm timeInfo)
 {
   // 5 day, forecast
   String hiStr, loStr;
@@ -735,7 +734,7 @@ void drawForecast(const owm_daily_t *daily, tm timeInfo)
   /* This function is responsible for drawing the current alerts if any.
    * Up to 2 alerts can be drawn.
    */
-  void drawAlerts(std::vector<owm_alerts_t> & alerts,
+  void drawAlerts(std::vector<wx_alerts_t> & alerts,
                   const String &city, const String &date)
   {
 #if DEBUG_LEVEL >= 1
@@ -793,7 +792,7 @@ void drawForecast(const owm_daily_t *daily, tm timeInfo)
     // adjust max width to for 48x48 icons
     max_w -= 48;
 
-    owm_alerts_t &cur_alert = alerts[alert_indices[0]];
+    wx_alerts_t &cur_alert = alerts[alert_indices[0]];
     display.drawInvertedBitmap(196, 8, getAlertBitmap48(cur_alert), 48, 48,
                                ACCENT_COLOR);
     // must be called after getAlertBitmap
@@ -826,7 +825,7 @@ void drawForecast(const owm_daily_t *daily, tm timeInfo)
     display.setFont(&FONT_12pt8b);
     for (int i = 0; i < 2; ++i)
     {
-      owm_alerts_t &cur_alert = alerts[alert_indices[i]];
+      wx_alerts_t &cur_alert = alerts[alert_indices[i]];
 
       display.drawInvertedBitmap(196, (i * 32), getAlertBitmap32(cur_alert),
                                  32, 32, ACCENT_COLOR);
@@ -890,7 +889,7 @@ int kelvin_to_plot_y(float celcius, int tempBoundMin, float yPxPerUnit,
 /* This function is responsible for drawing the outlook graph for the specified
  * number of hours(up to 48).
  */
-void drawOutlookGraph(const owm_hourly_t *hourly, const owm_daily_t *daily,
+void drawOutlookGraph(const wx_hourly_t *hourly, const wx_daily_t *daily,
                       tm timeInfo)
 {
   const int xPos0 = 350;

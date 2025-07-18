@@ -62,16 +62,8 @@
 // If your locale is not here, you can add it by copying and modifying one of
 // the files in src/locales. Please feel free to create a pull request to add
 // official support for your locale.
-//   Language (Territory)            code
-//   German (Germany)                de_DE
 //   English (United Kingdom)        en_GB
 //   English (United States)         en_US
-//   Estonian (Estonia)              et_EE
-//   Finnish (Finland)               fi_FI
-//   French (France)                 fr_FR
-//   Italiano (Italia)               it_IT
-//   Dutch (Belgium)                 nl_BE
-//   Portuguese (Brazil)             pt_BR
 #define LOCALE en_US
 
 // UNITS
@@ -365,6 +357,10 @@ extern const uint32_t MIN_BATTERY_VOLTAGE;
 #if !(  defined(UNITS_DIST_KILOMETERS) \
       ^ defined(UNITS_DIST_MILES))
   #error Invalid configuration. Exactly one distance unit must be selected.
+#endif
+#if !(  defined(UNITS_SOLAR_RADIATION_WM2) \
+      ^ defined(UNITS_SOLAR_RADIATION_UVI))
+  #error Invalid Configuration. Exactly one Solar Radiation type must be selected
 #endif
 #if !(  defined(UNITS_HOURLY_PRECIP_POP)         \
       ^ defined(UNITS_HOURLY_PRECIP_MILLIMETERS) \

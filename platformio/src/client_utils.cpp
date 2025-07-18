@@ -34,7 +34,6 @@
 // header files
 #include "_locale.h"
 #include "api_response.h"
-#include "aqi.h"
 #include "client_utils.h"
 #include "config.h"
 #include "display_utils.h"
@@ -44,9 +43,9 @@
 #endif
 
 #ifdef USE_HTTP
-  static const uint16_t OWM_PORT = 80;
+  static const uint16_t HTTP_PORT = 80;
 #else
-  static const uint16_t OWM_PORT = 443;
+  static const uint16_t HTTP_PORT = 443;
 #endif
 
 /* Power-on and connect WiFi.
@@ -137,16 +136,16 @@ bool waitForSNTPSync(tm *timeInfo)
   return printLocalTime(timeInfo);
 } // waitForSNTPSync
 
-/* Perform an HTTP GET request to OpenWeatherMap's "One Call" API
+/* Perform an HTTP GET request to Tempest BetterForecast API
  * If data is received, it will be parsed and stored in the global variable
- * owm_onecall.
+ * tempest_resp.
  *
  * Returns the HTTP Status Code.
  */
 #ifdef USE_HTTP
-  int getOWMonecall(WiFiClient &client, owm_resp_onecall_t &r)
+  int getTempestCall(WiFiClient &client, tempest_resp_t &r)
 #else
-  int getOWMonecall(WiFiClientSecure &client, owm_resp_onecall_t &r)
+  int getTempestCall(WiFiClientSecure &client, tempest_resp_t &r)
 #endif
 {
   int attempts = 0;
@@ -183,7 +182,7 @@ bool waitForSNTPSync(tm *timeInfo)
     http.collectHeaders(keys, 1);
 
 
-    http.begin(client, TEMPEST_ENDPOINT, OWM_PORT, uri);
+    http.begin(client, TEMPEST_ENDPOINT, HTTP_PORT, uri);
     httpResponse = http.GET();
     if (httpResponse == HTTP_CODE_OK)
     {
@@ -195,7 +194,7 @@ bool waitForSNTPSync(tm *timeInfo)
           http.header("Transfer-Encoding") == "chunked" ? decodedStream : rawStream;
 
 
-      jsonErr = deserializeOneCall(response, r);
+      jsonErr = deserializeTempestCall(response, r);
       if (jsonErr)
       {
         // -256 offset distinguishes these errors from httpClient errors
@@ -211,7 +210,7 @@ bool waitForSNTPSync(tm *timeInfo)
   }
 
   return httpResponse;
-} // getOWMonecall
+} // getTempestCall
 
 
 

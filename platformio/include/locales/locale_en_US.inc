@@ -63,12 +63,6 @@ const char *LC_ERA_D_T_FMT = "";
 // ERA_T_FMT               era time format string
 const char *LC_ERA_T_FMT   = "";
 
-// OWM LANGUAGE
-// For full list of languages, see
-// https://openweathermap.org/api/one-call-api#multi
-// Note: "[only] The contents of the 'description' field will be translated."
-const String OWM_LANG = "en";
-
 // CURRENT CONDITIONS
 const char *TXT_FEELS_LIKE         = "Feels Like";
 const char *TXT_SUNRISE            = "Sunrise";
@@ -244,102 +238,6 @@ const std::vector<String> TERM_DUST =
     {"dust", "sand"};
 const std::vector<String> TERM_STRONG_WIND =
     {"wind"};
-
-// AIR QUALITY INDEX
-extern "C" {
-// Seemingly every country uses a different scale for Air Quality Index (AQI).
-// I have written a library to calculate many of the most popular AQI scales.
-// Feel free to request the addition of a new AQI scale by opening an Issue.
-// https://github.com/lmarzen/pollutant-concentration-to-aqi
-// Please choose this region's preferred AQI scale.
-//   AUSTRALIA_AQI        CANADA_AQHI          EUROPEAN_UNION_CAQI
-//   HONG_KONG_AQHI       INDIA_AQI            CHINA_AQI
-//   SINGAPORE_PSI        SOUTH_KOREA_CAI      UNITED_KINGDOM_DAQI
-//   UNITED_STATES_AQI
-const aqi_scale_t AQI_SCALE = UNITED_STATES_AQI;
-
-const char *AUSTRALIA_AQI_TXT[6] =
-{
-  "Very Good",
-  "Good",
-  "Fair",
-  "Poor",
-  "Very Poor",
-  "Hazardous",
-};
-const char *CANADA_AQHI_TXT[4] =
-{
-  "Low",
-  "Moderate",
-  "High",
-  "Very High",
-};
-const char *EUROPEAN_UNION_CAQI_TXT[5] =
-{
-  "Very Low",
-  "Low",
-  "Medium",
-  "High",
-  "Very High",
-};
-const char *HONG_KONG_AQHI_TXT[5] =
-{
-  "Low",
-  "Moderate",
-  "High",
-  "Very High",
-  "Hazardous",
-};
-const char *INDIA_AQI_TXT[6] =
-{
-  "Good",
-  "Satisfactory",
-  "Moderate",
-  "Poor",
-  "Very Poor",
-  "Severe",
-};
-const char *CHINA_AQI_TXT[6] =
-{
-  "Excellent",
-  "Good",
-  "Lightly Polluted",
-  "Moderately Polluted",
-  "Heavily Polluted",
-  "Severely Polluted",
-};
-const char *SINGAPORE_PSI_TXT[5] =
-{
-  "Good",
-  "Moderate",
-  "Unhealthy",
-  "Very Unhealthy",
-  "Hazardous",
-};
-const char *SOUTH_KOREA_CAI_TXT[4] =
-{
-  "Good",
-  "Medium",
-  "Unhealthy",
-  "Very Unhealthy",
-};
-const char *UNITED_KINGDOM_DAQI_TXT[4] =
-{
-  "Low",
-  "Moderate",
-  "High",
-  "Very High",
-};
-const char *UNITED_STATES_AQI_TXT[6] =
-{
-  "Good",
-  "Moderate",
-  "Unhealthy for Sensitive Groups",
-  "Unhealthy",
-  "Very Unhealthy",
-  "Hazardous",
-};
-} // end extern "C"
 
 // COMPASS POINT
 const char *COMPASS_POINT_NOTATION[32] = {

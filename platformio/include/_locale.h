@@ -20,7 +20,6 @@
 
 #include <vector>
 #include <Arduino.h>
-#include <aqi.h>
 
 // LC_TIME
 extern const char *LC_D_T_FMT;
@@ -37,9 +36,6 @@ extern const char *LC_ERA;
 extern const char *LC_ERA_D_FMT;
 extern const char *LC_ERA_D_T_FMT;
 extern const char *LC_ERA_T_FMT;
-
-// OWM LANGUAGE
-extern const String OWM_LANG;
 
 // CURRENT CONDITIONS
 extern const char *TXT_FEELS_LIKE;
@@ -166,21 +162,6 @@ extern const std::vector<String> TERM_HURRICANE_WARNING;
 extern const std::vector<String> TERM_HURRICANE;
 extern const std::vector<String> TERM_DUST;
 extern const std::vector<String> TERM_STRONG_WIND;
-
-// AIR QUALITY INDEX
-extern "C" {
-extern const aqi_scale_t AQI_SCALE;
-extern const char *AUSTRALIA_AQI_TXT[6];
-extern const char *CANADA_AQHI_TXT[4];
-extern const char *EUROPEAN_UNION_CAQI_TXT[5];
-extern const char *HONG_KONG_AQHI_TXT[5];
-extern const char *INDIA_AQI_TXT[6];
-extern const char *CHINA_AQI_TXT[6];
-extern const char *SINGAPORE_PSI_TXT[5];
-extern const char *SOUTH_KOREA_CAI_TXT[4];
-extern const char *UNITED_KINGDOM_DAQI_TXT[4];
-extern const char *UNITED_STATES_AQI_TXT[6];
-}
 
 // COMPASS POINT
 extern const char *COMPASS_POINT_NOTATION[32];

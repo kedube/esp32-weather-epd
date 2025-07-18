@@ -45,7 +45,7 @@
 #endif
 
 // too large to allocate locally on stack
-static owm_resp_onecall_t       owm_onecall;
+static tempest_resp_t       tempest_forecast_call;
 
 Preferences prefs;
 
@@ -258,7 +258,7 @@ void setup()
   WiFiClientSecure client;
   client.setCACert(cert_Amazon_RSA_2048_M02);
 #endif
-  int rxStatus = getOWMonecall(client, owm_onecall);
+  int rxStatus = getTempestCall(client, tempest_forecast_call);
   if (rxStatus != HTTP_CODE_OK)
   {
         killWiFi();
@@ -274,51 +274,6 @@ void setup()
       }
   killWiFi(); // WiFi no longer needed
 
-  // GET INDOOR TEMPERATURE AND HUMIDITY, start BMEx80...
-  pinMode(PIN_BME_PWR, OUTPUT);
-  digitalWrite(PIN_BME_PWR, HIGH);
-  TwoWire I2C_bme = TwoWire(0);
-  I2C_bme.begin(PIN_BME_SDA, PIN_BME_SCL, 100000); // 100kHz
-  float inTemp     = NAN;
-  float inHumidity = NAN;
-#if defined(SENSOR_BME280)
-  Serial.print(String(TXT_READING_FROM) + " BME280... ");
-  Adafruit_BME280 bme;
-
-  if(bme.begin(BME_ADDRESS, &I2C_bme))
-  {
-#endif
-#if defined(SENSOR_BME680)
-  Serial.print(String(TXT_READING_FROM) + " BME680... ");
-  Adafruit_BME680 bme(&I2C_bme);
-
-  if(bme.begin(BME_ADDRESS))
-  {
-#endif
-    inTemp     = bme.readTemperature(); // Celsius
-    inHumidity = bme.readHumidity();    // %
-
-    // check if BME readings are valid
-    // note: readings are checked again before drawing to screen. If a reading
-    //       is not a number (NAN) then an error occurred, a dash '-' will be
-    //       displayed.
-    if (std::isnan(inTemp) || std::isnan(inHumidity))
-    {
-      statusStr = "BME " + String(TXT_READ_FAILED);
-      Serial.println(statusStr);
-    }
-    else
-    {
-      Serial.println(TXT_SUCCESS);
-    }
-  }
-  else
-  {
-    statusStr = "BME " + String(TXT_NOT_FOUND); // check wiring
-    Serial.println(statusStr);
-  }
-  digitalWrite(PIN_BME_PWR, LOW);
-
   String refreshTimeStr;
   getRefreshTimeStr(refreshTimeStr, timeConfigured, &timeInfo);
   String dateStr;
@@ -328,13 +283,12 @@ void setup()
   initDisplay();
   do
   {
-    drawCurrentConditions(owm_onecall.current, owm_onecall.daily[0],
-                          inTemp, inHumidity);
-    drawOutlookGraph(owm_onecall.hourly, owm_onecall.daily, timeInfo);
-    drawForecast(owm_onecall.daily, timeInfo);
+    drawCurrentConditions(tempest_forecast_call.current, tempest_forecast_call.daily[0]);
+    drawOutlookGraph(tempest_forecast_call.hourly, tempest_forecast_call.daily, timeInfo);
+    drawForecast(tempest_forecast_call.daily, timeInfo);
     drawLocationDate(CITY_STRING, dateStr);
 #if DISPLAY_ALERTS
-    drawAlerts(owm_onecall.alerts, CITY_STRING, dateStr);
+    drawAlerts(tempest_forecast_call.alerts, CITY_STRING, dateStr);
 #endif
     drawStatusBar(statusStr, refreshTimeStr, wifiRSSI, batteryVoltage);
   } while (display.nextPage());

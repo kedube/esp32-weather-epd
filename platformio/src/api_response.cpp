@@ -1,7 +1,3 @@
-//998d2618-6b64-4fba-b5ff-b371426956ef
-
-
-
 /* API response deserialization for esp32-weather-epd.
  * Copyright (C) 2022-2024  Luke Marzen
  *
@@ -24,8 +20,8 @@
 #include "api_response.h"
 #include "config.h"
 
-DeserializationError deserializeOneCall(Stream &json,
-                                        owm_resp_onecall_t &r)
+DeserializationError deserializeTempestCall(Stream &json,
+                                        tempest_resp_t &r)
 {
   int i;
   JsonDocument doc;
@@ -83,7 +79,7 @@ DeserializationError deserializeOneCall(Stream &json,
     r.hourly[i].weather.description = hourly["conditions"].as<const char *>();
     r.hourly[i].weather.icon        = hourly["icon"]       .as<const char *>();
 
-    if (i == OWM_NUM_HOURLY - 1)
+    if (i == NUM_HOURS - 1)
     {
       break;
     }
@@ -102,7 +98,7 @@ DeserializationError deserializeOneCall(Stream &json,
     r.daily[i].weather.description = daily["conditions"].as<const char *>();
     r.daily[i].weather.icon        = daily["icon"].as<const char *>();
 
-    if (i == OWM_NUM_DAILY - 1)
+    if (i == NUM_DAYS - 1)
     {
       break;
     }
@@ -113,16 +109,15 @@ DeserializationError deserializeOneCall(Stream &json,
   i = 0;
   for (JsonObject alerts : doc["alerts"].as<JsonArray>())
   {
-    owm_alerts_t new_alert = {};
+    wx_alerts_t new_alert = {};
     // new_alert.sender_name = alerts["sender_name"].as<const char *>();
     new_alert.event       = alerts["event"]      .as<const char *>();
     new_alert.start       = alerts["start"]      .as<int64_t>();
     new_alert.end         = alerts["end"]        .as<int64_t>();
     // new_alert.description = alerts["description"].as<const char *>();
-    new_alert.tags        = alerts["tags"][0]    .as<const char *>();
     r.alerts.push_back(new_alert);
 
-    if (i == OWM_NUM_ALERTS - 1)
+    if (i == NUM_ALERTS - 1)
     {
       break;
     }
@@ -131,4 +126,4 @@ DeserializationError deserializeOneCall(Stream &json,
 #endif
 
   return error;
-} // end deserializeOneCall
+} // end deserializeTempestCall
