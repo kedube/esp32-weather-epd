@@ -879,8 +879,8 @@ void drawForecast(const wx_daily_t *daily, tm timeInfo)
                                ACCENT_COLOR);
     // must be called after getAlertBitmap
     toTitleCase(cur_alert.event);
-
     display.setFont(&FONT_14pt8b);
+
     if (getStringWidth(cur_alert.event) <= max_w)
     { // Fits on a single line, draw along bottom
       drawString(196 + 48 + 4, 24 + 8 - 12 + 20 + 1, cur_alert.event, LEFT);
@@ -918,6 +918,10 @@ void drawForecast(const wx_daily_t *daily, tm timeInfo)
                         cur_alert.event, LEFT, max_w, 1, 0);
     } // end for-loop
   } // end 2 alerts
+  if (num_valid_alerts > 2) {
+    display.setFont(&FONT_8pt8b);
+    drawString(00, 20, "WWA Truncated", LEFT, ACCENT_COLOR);
+  }
 
   free(ignore_list);
   free(alert_indices);

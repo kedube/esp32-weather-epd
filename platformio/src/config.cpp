@@ -54,13 +54,14 @@ const unsigned long WIFI_TIMEOUT = 10000; // ms, WiFi connection timeout.
 //   -1   Connection Refused
 //   -11  Read Timeout
 //   -258 Deserialization Incomplete Input
-const unsigned HTTP_CLIENT_TCP_TIMEOUT = 10000; // ms
+const unsigned HTTP_CLIENT_TCP_TIMEOUT = 15000; // ms
 
 // TEMPEST API
 const String TEMPEST_APIKEY = "";
 const String TEMPEST_STATIONID = "";
 const String TEMPEST_ENDPOINT = "swd.weatherflow.com";
 
+const String NWS_ENDPOINT = "api.weather.gov";
 
 
 // LOCATION

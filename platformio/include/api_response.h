@@ -140,6 +140,8 @@ typedef struct coordinates
   float   lon;
 } coordinates_t;
 
+DeserializationError deserializeNWSCall(Stream &json,
+                                        tempest_resp_t &r);
 
 DeserializationError deserializeTempestCall(Stream &json,
                                         tempest_resp_t &r);

@@ -19,6 +19,46 @@
 #include <ArduinoJson.h>
 #include "api_response.h"
 #include "config.h"
+DeserializationError deserializeNWSCall(Stream &json,
+                                        tempest_resp_t &r)
+{
+  int i;
+  JsonDocument doc;
+  DeserializationError error = deserializeJson(doc, json);
+#if DEBUG_LEVEL >= 1
+  Serial.println("[debug] doc.overflowed() : "
+                 + String(doc.overflowed()));
+#endif
+#if DEBUG_LEVEL >= 2
+  serializeJsonPretty(doc, Serial);
+#endif
+  if (error) {
+    return error;
+  }
+
+  #if DISPLAY_ALERTS
+    i = 0;
+    for (JsonObject alerts : doc["features"].as<JsonArray>())
+    {
+      wx_alerts_t new_alert = {};
+      // new_alert.sender_name = alerts["sender_name"].as<const char *>();
+      new_alert.event       = alerts["properties"]["event"]      .as<const char *>();
+      Serial.println("Found NWS Event Type: " + new_alert.event );
+      // new_alert.start       = alerts["start"]      .as<int64_t>();
+      // new_alert.end         = alerts["end"]        .as<int64_t>();
+      r.alerts.push_back(new_alert);
+
+      if (i == NUM_ALERTS - 1)
+      {
+        break;
+      }
+      ++i;
+    }
+  #endif
+  return error;
+
+}
+
 
 DeserializationError deserializeTempestCall(Stream &json,
                                         tempest_resp_t &r)
@@ -105,25 +145,6 @@ DeserializationError deserializeTempestCall(Stream &json,
     ++i;
   }
 
-#if DISPLAY_ALERTS
-  i = 0;
-  for (JsonObject alerts : doc["alerts"].as<JsonArray>())
-  {
-    wx_alerts_t new_alert = {};
-    // new_alert.sender_name = alerts["sender_name"].as<const char *>();
-    new_alert.event       = alerts["event"]      .as<const char *>();
-    new_alert.start       = alerts["start"]      .as<int64_t>();
-    new_alert.end         = alerts["end"]        .as<int64_t>();
-    // new_alert.description = alerts["description"].as<const char *>();
-    r.alerts.push_back(new_alert);
-
-    if (i == NUM_ALERTS - 1)
-    {
-      break;
-    }
-    ++i;
-  }
-#endif
 
   return error;
 } // end deserializeTempestCall

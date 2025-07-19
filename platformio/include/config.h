@@ -294,6 +294,7 @@ extern const unsigned HTTP_CLIENT_TCP_TIMEOUT;
 extern const String TEMPEST_APIKEY;
 extern const String TEMPEST_STATIONID;
 extern const String TEMPEST_ENDPOINT;
+extern const String NWS_ENDPOINT;
 extern const String LAT;
 extern const String LON;
 extern const String CITY_STRING;

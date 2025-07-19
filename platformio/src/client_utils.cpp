@@ -213,6 +213,77 @@ bool waitForSNTPSync(tm *timeInfo)
 } // getTempestCall
 
 
+/* Perform an HTTP GET request to NWS Alerts API
+ * If data is received, it will be parsed and stored in the global variable
+ * tempest_resp.
+ *
+ * Returns the HTTP Status Code.
+ */
+#ifdef USE_HTTP
+  int getNWSCall(WiFiClient &client, tempest_resp_t &r)
+#else
+  int getNWSCall(WiFiClientSecure &client, tempest_resp_t &r)
+#endif
+{
+  int attempts = 0;
+  bool rxSuccess = false;
+  DeserializationError jsonErr = {};
+  String uri = "/alerts/active?point=" + String(r.lat) + "," + String(r.lon);
+
+  Serial.print(TXT_ATTEMPTING_HTTP_REQ);
+  Serial.println(": " + uri);
+  int httpResponse = 0;
+  while (!rxSuccess && attempts < 3)
+  {
+    wl_status_t connection_status = WiFi.status();
+    if (connection_status != WL_CONNECTED)
+    {
+      // -512 offset distinguishes these errors from httpClient errors
+      return -512 - static_cast<int>(connection_status);
+    }
+
+    HTTPClient http;
+    http.setConnectTimeout(HTTP_CLIENT_TCP_TIMEOUT); // default 5000ms
+    http.setTimeout(HTTP_CLIENT_TCP_TIMEOUT); // default 5000ms
+    // http.useHTTP10(true);
+
+    
+    // Ask HTTPClient to collect the Transfer-Encoding header
+    // (by default, it discards all headers)
+    const char* keys[] = {"Transfer-Encoding"};
+    http.collectHeaders(keys, 1);
+
+
+    http.begin(client, NWS_ENDPOINT, HTTP_PORT, uri);
+    httpResponse = http.GET();
+    if (httpResponse == HTTP_CODE_OK)
+    {
+      Stream& rawStream = http.getStream();
+      ChunkDecodingStream decodedStream(http.getStream());
+
+      // Choose the right stream depending on the Transfer-Encoding header
+      Stream& response =
+          http.header("Transfer-Encoding") == "chunked" ? decodedStream : rawStream;
+
+
+      jsonErr = deserializeNWSCall(response, r);
+      if (jsonErr)
+      {
+        // -256 offset distinguishes these errors from httpClient errors
+        httpResponse = -256 - static_cast<int>(jsonErr.code());
+      }
+      rxSuccess = !jsonErr;
+    }
+    client.stop();
+    http.end();
+    Serial.println("  " + String(httpResponse, DEC) + " "
+                   + getHttpResponsePhrase(httpResponse));
+    ++attempts;
+  }
+
+  return httpResponse;
+} // getNWSCall
+
 
 /* Prints debug information about heap usage.
  */

@@ -272,6 +272,31 @@ void setup()
         powerOffDisplay();
         beginDeepSleep(startTime, &timeInfo);
       }
+#ifdef USE_HTTP
+  WiFiClient nwsclient;
+#elif defined(USE_HTTPS_NO_CERT_VERIF)
+  WiFiClientSecure nwsclient;
+  nwsclient.setInsecure();
+#elif defined(USE_HTTPS_WITH_CERT_VERIF)
+  WiFiClientSecure nwsclient;
+  // nwsclient.setCACert(cert_ISRG_Root_X1);
+  nwsclient.setInsecure(); // This is horrible, but the NWS cert expires every 90 days and I don't want to maintain it
+
+#endif
+  int NWSrxStatus = getNWSCall(nwsclient, tempest_forecast_call);
+  if (NWSrxStatus != HTTP_CODE_OK)
+  {
+        killWiFi();
+        statusStr = "NWS Alerts API";
+        tmpStr = String(NWSrxStatus, DEC) + ": " + getHttpResponsePhrase(rxStatus);
+        initDisplay();
+        do
+        {
+          drawError(wi_cloud_down_196x196, statusStr, tmpStr);
+        } while (display.nextPage());
+        powerOffDisplay();
+        beginDeepSleep(startTime, &timeInfo);
+      }
   killWiFi(); // WiFi no longer needed
 
   String refreshTimeStr;

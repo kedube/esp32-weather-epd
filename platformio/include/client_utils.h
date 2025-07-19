@@ -33,8 +33,10 @@ bool waitForSNTPSync(tm *timeInfo);
 bool printLocalTime(tm *timeInfo);
 #ifdef USE_HTTP
   int getTempestCall(WiFiClient &client, tempest_resp_t &r);
+  int getNWSCall(WiFiClient &client, tempest_resp_t &r);
 #else
   int getTempestCall(WiFiClientSecure &client, tempest_resp_t &r);
+  int getNWSCall(WiFiClientSecure &client, tempest_resp_t &r);
 #endif
 
 
