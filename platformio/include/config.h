@@ -271,7 +271,7 @@
 //   level 0: basic status information, assists troubleshooting (default)
 //   level 1: increased verbosity for debugging
 //   level 2: print api responses to serial monitor
-#define DEBUG_LEVEL 1
+#define DEBUG_LEVEL 0
 
 // Set the below constants in "config.cpp"
 extern const uint8_t PIN_BAT_ADC;
@@ -378,6 +378,11 @@ extern const uint32_t MIN_BATTERY_VOLTAGE;
       ^ defined(UNITS_DAILY_PRECIP_CENTIMETERS) \
       ^ defined(UNITS_DAILY_PRECIP_INCHES))
   #error Invalid configuration. Exactly one daily precipitation measurement must be selected.
+#endif
+# if !( defined(UNITS_RAINFALL_INCHES)  \
+        ^ defined(UNITS_RAINFALL_MM) \
+        ^ defined(UNITS_RAINFALL_CM))
+  #error Invalid Configuration. Exactly one Rainfail Unit must be selected
 #endif
 #if !(  defined(USE_HTTP)                   \
       ^ defined(USE_HTTPS_NO_CERT_VERIF)    \

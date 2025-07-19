@@ -338,9 +338,9 @@ void drawCurrentConditions(const wx_current_t &current,
 #endif
   display.setFont(&FONT_12pt8b);
 #ifndef DISP_BW_V1
-  drawString(196 + 164 / 2, 98 + 69 / 2 + 12 + (2 * 17) + 8, dataStr, CENTER);
+  drawString(196 + 164 / 2, 98 + 69 / 2 + 12 + (2 * 17) + 12, dataStr, CENTER);
 #elif defined(DISP_BW_V1)
-  drawString(156 + 164 / 2, 98 + 69 / 2 + 12 + (2 * 17) + 8, dataStr, CENTER);
+  drawString(156 + 164 / 2, 98 + 69 / 2 + 12 + (2 * 17) + 12, dataStr, CENTER);
 #endif
   // line dividing top and bottom display areas
   // display.drawLine(0, 196, DISP_WIDTH - 1, 196, GxEPD_BLACK);
