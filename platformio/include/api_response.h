@@ -106,11 +106,11 @@ typedef struct wx_daily
  */
 typedef struct wx_alerts
 {
-  String  sender_name;      // Name of the alert source.
   String  event;            // Alert event name
   int64_t start;            // Date and time of the start of the alert, Unix, UTC
   int64_t end;              // Date and time of the end of the alert, Unix, UTC
-  String  description;      // Description of the alert
+  String  tags;             // Type of severe weather
+
 } wx_alerts_t;
 
 /*

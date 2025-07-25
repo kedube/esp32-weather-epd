@@ -995,12 +995,8 @@ void drawOutlookGraph(const wx_hourly_t *hourly, const wx_daily_t *daily,
   float tempMin = celsius_to_fahrenheit(hourly[0].temp);
 #endif
   float tempMax = tempMin;
-#ifdef UNITS_HOURLY_PRECIP_POP
-  float precipMax = hourly[0].pop;
-#else
-  float precipMax = hourly[0].rain_1h + hourly[0].snow_1h;
-#endif
   int yTempMajorTicks = 5;
+  float precipMax;
   float newTemp = 0;
   for (int i = 1; i < HOURLY_GRAPH_MAX; ++i)
   {
@@ -1016,10 +1012,10 @@ void drawOutlookGraph(const wx_hourly_t *hourly, const wx_daily_t *daily,
     tempMin = std::min(tempMin, newTemp);
     tempMax = std::max(tempMax, newTemp);
 #ifdef UNITS_HOURLY_PRECIP_POP
-    precipMax = std::max<float>(precipMax, hourly[i].pop);
-#else
+    precipMax = 100.0f; // std::max<float>(precipMax, hourly[i].pop);
+#else // show rain quantitative values
     precipMax = std::max<float>(
-                precipMax, hourly[i].rain_1h + hourly[i].snow_1h);
+                precipMax, hourly[i].rain_1h);
 #endif
   }
   int tempBoundMin = static_cast<int>(tempMin - 1)
@@ -1052,15 +1048,7 @@ void drawOutlookGraph(const wx_hourly_t *hourly, const wx_daily_t *daily,
 
 #ifdef UNITS_HOURLY_PRECIP_POP
   xPos1 = DISP_WIDTH - 23;
-  float precipBoundMax;
-  if (precipMax > 0)
-  {
-    precipBoundMax = 100.0f;
-  }
-  else
-  {
-    precipBoundMax = 0.0f;
-  }
+  float precipBoundMax = precipMax;
 #else
 #ifdef UNITS_HOURLY_PRECIP_MILLIMETERS
   xPos1 = DISP_WIDTH - 24;
@@ -1137,7 +1125,7 @@ void drawOutlookGraph(const wx_hourly_t *hourly, const wx_daily_t *daily,
     drawString(xPos0 - 8, yTick + 4, dataStr, RIGHT, ACCENT_COLOR);
 
     if (precipBoundMax > 0)
-    { // don't labels if precip is 0
+    { 
 #ifdef UNITS_HOURLY_PRECIP_POP
       // PoP
       dataStr = String(100 - (i * 20));
@@ -1256,7 +1244,7 @@ void drawOutlookGraph(const wx_hourly_t *hourly, const wx_daily_t *daily,
 #ifdef UNITS_HOURLY_PRECIP_POP
     float precipVal = hourly[i].pop;
 #else
-    float precipVal = hourly[i].rain_1h + hourly[i].snow_1h;
+    float precipVal = hourly[i].rain_1h;
 #ifdef UNITS_HOURLY_PRECIP_CENTIMETERS
     precipVal = millimeters_to_centimeters(precipVal);
 #endif

@@ -291,19 +291,44 @@ void filterAlerts(std::vector<wx_alerts_t> &resp, int *ignore_list)
     alert.event.toLowerCase();
   }
 
-  // Save only the 2 most recent alerts
-  int valid_cnt = 0;
+  // Deduplicate alerts with the same first tag. Keeping only the most urgent
+  // alerts of each tag and alerts who's urgency cannot be determined.
   for (int i = 0; i < resp.size(); ++i)
   {
-    if (valid_cnt < 2 && !ignore_list[i])
+    if (ignore_list[i] == 1)
     {
-      ++valid_cnt;
+      continue;
     }
-    else
+    if (resp[i].tags.isEmpty())
     {
-      ignore_list[i] = 1;
+      continue; // urgency can not be determined so it remains in the list
+    }
+
+    for (int j = 0; j < resp.size(); ++j)
+    {
+      if (i != j && resp[i].tags == resp[j].tags)
+      {
+        // comparing alerts of the same tag, removing the less urgent alert
+        if (eventUrgency(resp[i].event) >= eventUrgency(resp[j].event))
+        {
+          ignore_list[j] = 1;
+        }
+      }
     }
   }
+  // // Save only the 2 most recent alerts
+  // int valid_cnt = 0;
+  // for (int i = 0; i < resp.size(); ++i)
+  // {
+  //   if (valid_cnt < 2 && !ignore_list[i])
+  //   {
+  //     ++valid_cnt;
+  //   }
+  //   else
+  //   {
+  //     ignore_list[i] = 1;
+  //   }
+  // }
 
   // Remove trailing/extraneous information
   for (auto &alert : resp)

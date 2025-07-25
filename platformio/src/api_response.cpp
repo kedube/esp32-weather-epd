@@ -46,6 +46,7 @@ DeserializationError deserializeNWSCall(Stream &json,
       Serial.println("Found NWS Event Type: " + new_alert.event );
       // new_alert.start       = alerts["start"]      .as<int64_t>();
       // new_alert.end         = alerts["end"]        .as<int64_t>();
+      new_alert.tags        = alerts["properties"]["event"]    .as<const char *>(); // hack to use existing logic for dedup
       r.alerts.push_back(new_alert);
 
       if (i == NUM_ALERTS - 1)
