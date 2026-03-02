@@ -45,8 +45,7 @@
 #endif
 
 // too large to allocate locally on stack
-static owm_resp_onecall_t       owm_onecall;
-static owm_resp_air_pollution_t owm_air_pollution;
+static tempest_resp_t       tempest_forecast_call;
 
 Preferences prefs;
 
@@ -257,36 +256,47 @@ void setup()
   client.setInsecure();
 #elif defined(USE_HTTPS_WITH_CERT_VERIF)
   WiFiClientSecure client;
-  client.setCACert(cert_Sectigo_RSA_Organization_Validation_Secure_Server_CA);
+  client.setCACert(cert_Amazon_RSA_2048_M02);
 #endif
-  int rxStatus = getOWMonecall(client, owm_onecall);
+  int rxStatus = getTempestCall(client, tempest_forecast_call);
   if (rxStatus != HTTP_CODE_OK)
   {
-    killWiFi();
-    statusStr = "One Call " + OWM_ONECALL_VERSION + " API";
-    tmpStr = String(rxStatus, DEC) + ": " + getHttpResponsePhrase(rxStatus);
-    initDisplay();
-    do
-    {
-      drawError(wi_cloud_down_196x196, statusStr, tmpStr);
-    } while (display.nextPage());
-    powerOffDisplay();
-    beginDeepSleep(startTime, &timeInfo);
-  }
-  rxStatus = getOWMairpollution(client, owm_air_pollution);
-  if (rxStatus != HTTP_CODE_OK)
+        killWiFi();
+        statusStr = "Tempest Better Forecast API";
+        tmpStr = String(rxStatus, DEC) + ": " + getHttpResponsePhrase(rxStatus);
+        initDisplay();
+        do
+        {
+          drawError(wi_cloud_down_196x196, statusStr, tmpStr);
+        } while (display.nextPage());
+        powerOffDisplay();
+        beginDeepSleep(startTime, &timeInfo);
+      }
+#ifdef USE_HTTP
+  WiFiClient nwsclient;
+#elif defined(USE_HTTPS_NO_CERT_VERIF)
+  WiFiClientSecure nwsclient;
+  nwsclient.setInsecure();
+#elif defined(USE_HTTPS_WITH_CERT_VERIF)
+  WiFiClientSecure nwsclient;
+  // nwsclient.setCACert(cert_ISRG_Root_X1);
+  nwsclient.setInsecure(); // This is horrible, but the NWS cert expires every 90 days and I don't want to maintain it
+
+#endif
+  int NWSrxStatus = getNWSCall(nwsclient, tempest_forecast_call);
+  if (NWSrxStatus != HTTP_CODE_OK)
   {
-    killWiFi();
-    statusStr = "Air Pollution API";
-    tmpStr = String(rxStatus, DEC) + ": " + getHttpResponsePhrase(rxStatus);
-    initDisplay();
-    do
-    {
-      drawError(wi_cloud_down_196x196, statusStr, tmpStr);
-    } while (display.nextPage());
-    powerOffDisplay();
-    beginDeepSleep(startTime, &timeInfo);
-  }
+        killWiFi();
+        statusStr = "NWS Alerts API";
+        tmpStr = String(NWSrxStatus, DEC) + ": " + getHttpResponsePhrase(rxStatus);
+        initDisplay();
+        do
+        {
+          drawError(wi_cloud_down_196x196, statusStr, tmpStr);
+        } while (display.nextPage());
+        powerOffDisplay();
+        beginDeepSleep(startTime, &timeInfo);
+      }
   killWiFi(); // WiFi no longer needed
 
   // GET INDOOR TEMPERATURE AND HUMIDITY, start BMEx80...
@@ -346,13 +356,12 @@ void setup()
   initDisplay();
   do
   {
-    drawCurrentConditions(owm_onecall.current, owm_onecall.daily[0],
-                          owm_air_pollution, inTemp, inHumidity);
-    drawOutlookGraph(owm_onecall.hourly, owm_onecall.daily, timeInfo);
-    drawForecast(owm_onecall.daily, timeInfo);
+    drawCurrentConditions(tempest_forecast_call.current, tempest_forecast_call.daily[0]);
+    drawOutlookGraph(tempest_forecast_call.hourly, tempest_forecast_call.daily, timeInfo);
+    drawForecast(tempest_forecast_call.daily, timeInfo);
     drawLocationDate(CITY_STRING, dateStr);
 #if DISPLAY_ALERTS
-    drawAlerts(owm_onecall.alerts, CITY_STRING, dateStr);
+    drawAlerts(tempest_forecast_call.alerts, CITY_STRING, dateStr);
 #endif
     drawStatusBar(statusStr, refreshTimeStr, wifiRSSI, batteryVoltage);
   } while (display.nextPage());

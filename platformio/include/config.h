@@ -66,8 +66,6 @@
 // If your locale is not here, you can add it by copying and modifying one of
 // the files in src/locales. Please feel free to create a pull request to add
 // official support for your locale.
-//   Language (Territory)            code
-//   German (Germany)                de_DE
 //   English (United Kingdom)        en_GB
 //   English (United States)         en_US
 //   Estonian (Estonia)              et_EE
@@ -105,8 +103,8 @@
 // #define UNITS_PRES_HECTOPASCALS
 // #define UNITS_PRES_PASCALS
 // #define UNITS_PRES_MILLIMETERSOFMERCURY
-#define UNITS_PRES_INCHESOFMERCURY
-// #define UNITS_PRES_MILLIBARS
+// #define UNITS_PRES_INCHESOFMERCURY
+#define UNITS_PRES_MILLIBARS
 // #define UNITS_PRES_ATMOSPHERES
 // #define UNITS_PRES_GRAMSPERSQUARECENTIMETER
 // #define UNITS_PRES_POUNDSPERSQUAREINCH
@@ -116,6 +114,16 @@
 //   Imperial : Miles
 // #define UNITS_DIST_KILOMETERS
 #define UNITS_DIST_MILES
+
+// UNITS -- RAINFALL
+#define UNITS_RAINFALL_INCHES
+// #define UNITS_RAINFALL_MM
+// #define UNITS_RAINFALL_CM
+
+// Solar Radiation
+// Show UV Index or Raw value
+// #define UNITS_SOLAR_RADIATION_UVI
+#define UNITS_SOLAR_RADIATION_WM2
 
 // UNITS - PRECIPITATION (HOURLY)
 // Measure of precipitation.
@@ -132,10 +140,11 @@
 // This can either be Probability of Precipitation (PoP) or daily volume.
 //   Metric   : Millimeters
 //   Imperial : Inches
-// #define UNITS_DAILY_PRECIP_POP
+#define UNITS_DAILY_PRECIP_POP
+// the following are not applicable for Tempest
 // #define UNITS_DAILY_PRECIP_MILLIMETERS
 // #define UNITS_DAILY_PRECIP_CENTIMETERS
-#define UNITS_DAILY_PRECIP_INCHES
+// #define UNITS_DAILY_PRECIP_INCHES
 
 // Hypertext Transfer Protocol (HTTP)
 // HTTP
@@ -170,11 +179,11 @@
 //   Intercardinal (Ordinal)    8  ±22.500°   NE
 //   Secondary Intercardinal   16  ±11.250°   NNE
 //   Tertiary Intercardinal    32   ±5.625°   NbE
-#define WIND_INDICATOR_ARROW
+// #define WIND_INDICATOR_ARROW
 // #define WIND_INDICATOR_NUMBER
 // #define WIND_INDICATOR_CPN_CARDINAL
 // #define WIND_INDICATOR_CPN_INTERCARDINAL
-// #define WIND_INDICATOR_CPN_SECONDARY_INTERCARDINAL
+#define WIND_INDICATOR_CPN_SECONDARY_INTERCARDINAL
 // #define WIND_INDICATOR_CPN_TERTIARY_INTERCARDINAL
 // #define WIND_INDICATOR_NONE
 
@@ -277,7 +286,7 @@
 //   0 : Disable (hide always)
 //   1 : Enable (show always)
 //   2 : Smart (show only when precipitation is forecasted)
-#define DISPLAY_DAILY_PRECIP 2
+#define DISPLAY_DAILY_PRECIP 1
 
 // HOURLY WEATHER ICONS
 // Weather icons to be displayed on the temperature and precipitation chart.
@@ -307,7 +316,7 @@
 //   You may choose to power your weather display with or without a battery.
 //   Low power behavior can be controlled in config.cpp.
 //   If you wish to disable battery monitoring set this macro to 0.
-#define BATTERY_MONITORING 1
+#define BATTERY_MONITORING 0
 
 // NON-VOLATILE STORAGE (NVS) NAMESPACE
 #define NVS_NAMESPACE "weather_epd"
@@ -337,9 +346,10 @@ extern const char *WIFI_SSID;
 extern const char *WIFI_PASSWORD;
 extern const unsigned long WIFI_TIMEOUT;
 extern const unsigned HTTP_CLIENT_TCP_TIMEOUT;
-extern const String OWM_APIKEY;
-extern const String OWM_ENDPOINT;
-extern const String OWM_ONECALL_VERSION;
+extern const String TEMPEST_APIKEY;
+extern const String TEMPEST_STATIONID;
+extern const String TEMPEST_ENDPOINT;
+extern const String NWS_ENDPOINT;
 extern const String LAT;
 extern const String LON;
 extern const String CITY_STRING;
@@ -409,6 +419,10 @@ extern const uint32_t MIN_BATTERY_VOLTAGE;
       ^ defined(UNITS_DIST_MILES))
   #error Invalid configuration. Exactly one distance unit must be selected.
 #endif
+#if !(  defined(UNITS_SOLAR_RADIATION_WM2) \
+      ^ defined(UNITS_SOLAR_RADIATION_UVI))
+  #error Invalid Configuration. Exactly one Solar Radiation type must be selected
+#endif
 #if !(  defined(UNITS_HOURLY_PRECIP_POP)         \
       ^ defined(UNITS_HOURLY_PRECIP_MILLIMETERS) \
       ^ defined(UNITS_HOURLY_PRECIP_CENTIMETERS) \
@@ -424,6 +438,11 @@ extern const uint32_t MIN_BATTERY_VOLTAGE;
       ^ defined(UNITS_DAILY_PRECIP_CENTIMETERS) \
       ^ defined(UNITS_DAILY_PRECIP_INCHES))
   #error Invalid configuration. Exactly one daily precipitation measurement must be selected.
+#endif
+# if !( defined(UNITS_RAINFALL_INCHES)  \
+        ^ defined(UNITS_RAINFALL_MM) \
+        ^ defined(UNITS_RAINFALL_CM))
+  #error Invalid Configuration. Exactly one Rainfall Unit must be selected
 #endif
 #if !(  defined(USE_HTTP)                   \
       ^ defined(USE_HTTPS_NO_CERT_VERIF)    \

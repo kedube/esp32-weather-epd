@@ -1,6 +1,9 @@
 # ESP32 E-Paper Weather Display
 
-A low-power weather display using a wifi-enabled ESP32 microcontroller and a 7.5" E-Paper display. Weather data is fetched from the OpenWeatherMap API, and an onboard sensor provides indoor temperature and humidity.
+A low-power weather display using a wifi-enabled ESP32 microcontroller and a 7.5" E-Paper display. Weather data is fetched from the Tempest Weather Station API. NWS Alerts are fetched from the US National Weather Service. 
+
+This project is forked from [Luke Marzen's EPaper Display](https://github.com/lmarzen/esp32-weather-epd) and adapted
+for the Tempest Weather Station
 
 <p float="left">
   <img src="showcase/assembled-demo-raleigh-front.jpg" />
@@ -69,6 +72,7 @@ Other items needed:
 ### Panel Support
 
   Waveshare and Good Display make equivalent panels. Either variant will work.
+  This Fork was tested with the V2 Waveshare 7.5inch panel
 
   | Panel                                   | Resolution | Colors          | Notes                                                                                                                 |
   |-----------------------------------------|------------|-----------------|-----------------------------------------------------------------------------------------------------------------------|
@@ -115,6 +119,8 @@ You'll want a nice way to show off your project. Here are a few popular choices.
 
   - If you want to share your own 3D printable designs, your contributions are highly encouraged and welcome!
 - Picture Frame
+  - Actually this works very well. The 7.5inch EPaper display will fit in a standard 5x7 frame with a Mat to 4x6 inch. 
+    Trim the inside of the mat to fit the display area of your EPaper display
 
 ### Solder-Free Component Selection (Optional)
 
@@ -134,13 +140,13 @@ The battery can be charged by plugging the FireBeetle ESP32 into the wall via th
   > **Warning**
   > The polarity of JST-PH2.0 connectors is not standardized! You may need to swap the order of the wires in the connector.
 
-NOTE: Waveshare now ships revision 2.3 of their e-paper HAT (no longer rev 2.2 ). Rev 2.3 has an additional `PWR` pin (not depicted in the wiring diagrams below); connect this pin to 3.3V.
+**NOTE: Waveshare now ships revision 2.3 of their e-paper HAT (no longer rev 2.2 ). Rev 2.3 has an additional `PWR` pin (not depicted in the wiring diagrams below); connect this pin to 3.3V.**
 
-IMPORTANT: The DESPI-C02 adapter has one physical switch that MUST be set correctly for the display to work.
+**IMPORTANT**: The DESPI-C02 adapter has one physical switch that MUST be set correctly for the display to work.
 
 - RESE: Set switch to position 0.47.
 
-IMPORTANT: The Waveshare E-Paper Driver HAT has two physical switches that MUST be set correctly for the display to work.
+**IMPORTANT**: The Waveshare E-Paper Driver HAT has two physical switches that MUST be set correctly for the display to work.
 
 - Display Config: Set switch to position B.
 
@@ -152,7 +158,21 @@ Cut the low power pad for even longer battery life.
 
   > Low Power Pad: This pad is specially designed for low power consumption. It is connected by default. You can cut off the thin wire in the middle with a knife to disconnect it. After disconnection, the static power consumption can be reduced by 500 μA. The power consumption can be reduced to 13 μA after controlling the maincontroller enter the sleep mode through the program. Note: when the pad is disconnected, you can only drive RGB LED light via the USB Power supply.
 
-![Wiring diagram with DESPI-C02 driver board.](showcase/wiring_diagram_despi-c02.png)
+#### Wiring Sample for Waveshare 7.5inch panel on ESP-WROOM-32
+Remember: these pin configurations can all be set ont in `config.cpp`. This is just how I have mine setup and is included in base code.
+| ESP32 Pin | Destination     | Notes                      |
+|-----------|-----------------|----------------------------|
+| V IN      | 5v Power Input  | Power for the ESP32        |
+| GND       | 5v Power Ground | Ground next to the VIN pin |
+| 3v3       | Display VCC     | 3.3v power for display     | 
+| GND       | Display GND     | Ground Next to 3v3 pin     |
+| D15       | Display BUSY    |                            |
+| D4        | Display CS      |                            |
+| D5        | Display PWR     |                            |
+| D18       | Display CLK     |                            |
+| D21       | Display RST     |                            |
+| D22       | Display DC      |                            |
+| D23       | Display DIN     |                            |
 
 
 ### Configuration, Compilation, and Upload
@@ -179,9 +199,7 @@ PlatformIO for VSCode is used for managing dependencies, code compilation, and u
 
      - WiFi credentials (ssid, password).
 
-     - Open Weather Map API key (it's free, see next section for important notes about obtaining an API key).
-
-     - Latitude and longitude.
+     - Tempest API Key and Station ID
 
      - Time and date formats.
 
@@ -207,18 +225,12 @@ PlatformIO for VSCode is used for managing dependencies, code compilation, and u
 
       - If you are getting other errors during the upload process, you may need to install drivers to allow you to upload code to the ESP32.
 
-### OpenWeatherMap API Key
+### Tempest API Key
+* From your [Tempest Account](https://tempestwx.com/settings), click on "Data Authorizations"
+* Create a new token and save the returned value -- this will be your API Key
 
-Sign up here to get an API key; it's free. <https://openweathermap.org/api>
-
-This project will make calls to 2 different APIs ("One Call" and "Air Pollution").
-
-- The One Call API 3.0 is only included in the "One Call by Call" subscription. This separate subscription includes 1,000 calls/day for free and allows you to pay only for the number of API calls made to this product.
-
-Here's how to subscribe and avoid any credit card changes:
-   - Go to <https://home.openweathermap.org/subscriptions/billing_info/onecall_30/base?key=base&service=onecall_30>
-   - Follow the instructions to complete the subscription.
-   - Go to <https://home.openweathermap.org/subscriptions> and set the "Calls per day (no more than)" to 1,000. This ensures you will never overrun the free calls.
+### Tempest Station ID
+* Assuming you're already logged into to your tempest Account, your station ID will be at the end of the URL if you go to `https://tempestwx.com/settings`. It will be a 6-digit number
 
 ## Error Messages and Troubleshooting
 
@@ -236,9 +248,9 @@ This error screen appears when the ESP32 fails to connect to WiFi. If the messag
 
 ### API Error
 <img src="showcase/demo-error-api.jpg" align="left" width="25%" />
-This error screen appears if an error (client or server) occurs when making an API request to OpenWeatherMap. The second line will give the error code followed by a descriptor phrase. Positive error codes correspond to HTTP response status codes, while error codes <= 0 indicate a client(esp32) error. The esp32 will retry once every SLEEP_DURATION (default = 30min).
+This error screen appears if an error (client or server) occurs when making an API request to Tempest. The second line will give the error code followed by a descriptor phrase. Positive error codes correspond to HTTP response status codes, while error codes <= 0 indicate a client(esp32) error. The esp32 will retry once every SLEEP_DURATION (default = 30min).
 <br/><br/>
-In the example shown to the left, "401: Unauthorized" may be the result of an incorrect API key or that you are attempting to use the One Call v3 API without the proper account setup.
+In the example shown to the left, "401: Unauthorized" may be the result of an incorrect API key.
 
 <br clear="left"/>
 

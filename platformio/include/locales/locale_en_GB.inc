@@ -63,11 +63,6 @@ const char *LC_ERA_D_T_FMT = "";
 // ERA_T_FMT               era time format string
 const char *LC_ERA_T_FMT   = "";
 
-// OWM LANGUAGE
-// For full list of languages, see
-// https://openweathermap.org/api/one-call-api#multi
-// Note: "[only] The contents of the 'description' field will be translated."
-const String OWM_LANG = "en";
 
 // CURRENT CONDITIONS
 const char *TXT_FEELS_LIKE         = "Feels Like";
@@ -76,14 +71,16 @@ const char *TXT_SUNSET             = "Sunset";
 const char *TXT_MOONRISE           = "Moonrise";
 const char *TXT_MOONSET            = "Moonset";
 const char *TXT_WIND               = "Wind";
+const char *TXT_WIND_GUST          = "Gusts";
 const char *TXT_HUMIDITY           = "Humidity";
 const char *TXT_UV_INDEX           = "UV Index";
+const char *TXT_SOLAR_RADIATION    = "Solar Radiation";
 const char *TXT_PRESSURE           = "Pressure";
-const char *TXT_AIR_QUALITY        = "Air Quality";
-const char *TXT_AIR_POLLUTION      = "Air Pollution";
-const char *TXT_VISIBILITY         = "Visibility";
+const char *TXT_WBGT               = "WBGT";
+const char *TXT_LIGHTNING          = "Lightning";
 const char *TXT_INDOOR_TEMPERATURE = "Temperature";
 const char *TXT_INDOOR_HUMIDITY    = "Humidity";
+<<<<<<< HEAD
 const char *TXT_DEWPOINT           = "Dew Point";
 
 // MOON PHASE
@@ -96,6 +93,10 @@ const char *TXT_FULL_MOON       = "Full Moon";
 const char *TXT_WANING_GIBBOUS  = "Waning Gibbous";
 const char *TXT_THIRD_QUARTER   = "Last Quarter";
 const char *TXT_WANING_CRESCENT = "Waning Crescent";
+=======
+const char *TXT_DEW_POINT          = "Dew Point";
+const char *TXT_TODAY_RAIN         = "Today's Rain";
+>>>>>>> upstream/Tempest
 
 // UV INDEX
 const char *TXT_UV_LOW       = "Low";
@@ -103,6 +104,13 @@ const char *TXT_UV_MODERATE  = "Moderate";
 const char *TXT_UV_HIGH      = "High";
 const char *TXT_UV_VERY_HIGH = "Very High";
 const char *TXT_UV_EXTREME   = "Extreme";
+
+//WBGT 
+const char *TXT_WBGT_NORISK = "No Risk";
+const char *TXT_WBGT_LOWRISK = "Low Risk";
+const char *TXT_WBGT_MODRISK = "Moderate Risk";
+const char *TXT_WBGT_HGIHRISK = "High Risk";
+const char *TXT_WBGT_EXTREMERISK = "Extreme Risk";
 
 // WIFI
 const char *TXT_WIFI_EXCELLENT     = "Excellent";
@@ -138,6 +146,8 @@ const char *TXT_UNITS_DIST_MILES      = "mi";
 const char *TXT_UNITS_PRECIP_MILLIMETERS = "mm";
 const char *TXT_UNITS_PRECIP_CENTIMETERS = "cm";
 const char *TXT_UNITS_PRECIP_INCHES      = "in";
+// UNITS SYMBOLS - Solar radiation
+const char *TXT_UNITS_SOLAR_RADIATION_WATTS_METERSQUARED = "W/m\262";
 
 // MISCELLANEOUS MESSAGES
 // Title Case
@@ -246,102 +256,6 @@ const std::vector<String> TERM_DUST =
     {"dust", "sand"};
 const std::vector<String> TERM_STRONG_WIND =
     {"wind", "monsoon"};
-
-// AIR QUALITY INDEX
-extern "C" {
-// Seemingly every country uses a different scale for Air Quality Index (AQI).
-// I have written a library to calculate many of the most popular AQI scales.
-// Feel free to request the addition of a new AQI scale by opening an Issue.
-// https://github.com/lmarzen/pollutant-concentration-to-aqi
-// Please choose this region's preferred AQI scale.
-//   AUSTRALIA_AQI        CANADA_AQHI          EUROPEAN_UNION_CAQI
-//   HONG_KONG_AQHI       INDIA_AQI            CHINA_AQI
-//   SINGAPORE_PSI        SOUTH_KOREA_CAI      UNITED_KINGDOM_DAQI
-//   UNITED_STATES_AQI
-const aqi_scale_t AQI_SCALE = UNITED_KINGDOM_DAQI;
-
-const char *AUSTRALIA_AQI_TXT[6] =
-{
-  "Very Good",
-  "Good",
-  "Fair",
-  "Poor",
-  "Very Poor",
-  "Hazardous",
-};
-const char *CANADA_AQHI_TXT[4] =
-{
-  "Low",
-  "Moderate",
-  "High",
-  "Very High",
-};
-const char *EUROPEAN_UNION_CAQI_TXT[5] =
-{
-  "Very Low",
-  "Low",
-  "Medium",
-  "High",
-  "Very High",
-};
-const char *HONG_KONG_AQHI_TXT[5] =
-{
-  "Low",
-  "Moderate",
-  "High",
-  "Very High",
-  "Hazardous",
-};
-const char *INDIA_AQI_TXT[6] =
-{
-  "Good",
-  "Satisfactory",
-  "Moderate",
-  "Poor",
-  "Very Poor",
-  "Severe",
-};
-const char *CHINA_AQI_TXT[6] =
-{
-  "Excellent",
-  "Good",
-  "Lightly Polluted",
-  "Moderately Polluted",
-  "Heavily Polluted",
-  "Severely Polluted",
-};
-const char *SINGAPORE_PSI_TXT[5] =
-{
-  "Good",
-  "Moderate",
-  "Unhealthy",
-  "Very Unhealthy",
-  "Hazardous",
-};
-const char *SOUTH_KOREA_CAI_TXT[4] =
-{
-  "Good",
-  "Medium",
-  "Unhealthy",
-  "Very Unhealthy",
-};
-const char *UNITED_KINGDOM_DAQI_TXT[4] =
-{
-  "Low",
-  "Moderate",
-  "High",
-  "Very High",
-};
-const char *UNITED_STATES_AQI_TXT[6] =
-{
-  "Good",
-  "Moderate",
-  "Unhealthy for Sensitive Groups",
-  "Unhealthy",
-  "Very Unhealthy",
-  "Hazardous",
-};
-} // end extern "C"
 
 // COMPASS POINT
 const char *COMPASS_POINT_NOTATION[32] = {

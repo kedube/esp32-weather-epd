@@ -57,21 +57,18 @@ void getDateStr(String &s, tm *timeInfo);
 void getRefreshTimeStr(String &s, bool timeSuccess, tm *timeInfo);
 void toTitleCase(String &text);
 void truncateExtraAlertInfo(String &text);
-void filterAlerts(std::vector<owm_alerts_t> &resp, int *ignore_list);
+void filterAlerts(std::vector<wx_alerts_t> &resp, int *ignore_list);
 const char *getUVIdesc(unsigned int uvi);
-float getAvgConc(const float pollutant[], int hours);
-int getAQI(const owm_resp_air_pollution_t &p);
-const char *getAQIdesc(int aqi);
+const char *getWBGTdesc(float wbgt);
 const char *getWiFidesc(int rssi);
 const uint8_t *getWiFiBitmap16(int rssi);
-const uint8_t *getHourlyForecastBitmap32(const owm_hourly_t &hourly,
-                                         const owm_daily_t  &today);
-const uint8_t *getDailyForecastBitmap64(const owm_daily_t &daily);
-const uint8_t *getCurrentConditionsBitmap196(const owm_current_t &current,
-                                             const owm_daily_t   &today);
-const uint8_t *getAlertBitmap32(const owm_alerts_t &alert);
-const uint8_t *getAlertBitmap48(const owm_alerts_t &alert);
-enum alert_category getAlertCategory(const owm_alerts_t &alert);
+const uint8_t *getHourlyForecastBitmap32(const wx_hourly_t &hourly);
+const uint8_t *getDailyForecastBitmap64(const wx_daily_t &daily);
+const uint8_t *getCurrentConditionsBitmap196(const wx_current_t &current,
+                                             const wx_daily_t   &today);
+const uint8_t *getAlertBitmap32(const wx_alerts_t &alert);
+const uint8_t *getAlertBitmap48(const wx_alerts_t &alert);
+enum alert_category getAlertCategory(const wx_alerts_t &alert);
 const uint8_t *getWindBitmap24(int windDeg);
 const char *getCompassPointNotation(int windDeg);
 const char *getHttpResponsePhrase(int code);

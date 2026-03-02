@@ -67,6 +67,7 @@ def printData(data, showPub = True):
                 if desc.access_method == x509.oid.AuthorityInformationAccessOID.CA_ISSUERS:
                     cas.append(desc.access_location.value)
     for ca in cas:
+        print('// CA: ' + ca)
         with urllib.request.urlopen(ca) as crt:
             print()
             print('// ' + ca)

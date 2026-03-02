@@ -20,7 +20,6 @@
 
 #include <vector>
 #include <Arduino.h>
-#include <aqi.h>
 
 // LC_TIME
 extern const char *LC_D_T_FMT;
@@ -38,9 +37,6 @@ extern const char *LC_ERA_D_FMT;
 extern const char *LC_ERA_D_T_FMT;
 extern const char *LC_ERA_T_FMT;
 
-// OWM LANGUAGE
-extern const String OWM_LANG;
-
 // CURRENT CONDITIONS
 extern const char *TXT_FEELS_LIKE;
 extern const char *TXT_SUNRISE;
@@ -48,12 +44,13 @@ extern const char *TXT_SUNSET;
 extern const char *TXT_MOONRISE;
 extern const char *TXT_MOONSET;
 extern const char *TXT_WIND;
+extern const char *TXT_WIND_GUST;
 extern const char *TXT_HUMIDITY;
 extern const char *TXT_UV_INDEX;
+extern const char *TXT_SOLAR_RADIATION;
 extern const char *TXT_PRESSURE;
-extern const char *TXT_AIR_QUALITY;
-extern const char *TXT_AIR_POLLUTION;
-extern const char *TXT_VISIBILITY;
+extern const char *TXT_WBGT;
+extern const char *TXT_LIGHTNING;
 extern const char *TXT_INDOOR_TEMPERATURE;
 extern const char *TXT_INDOOR_HUMIDITY;
 extern const char *TXT_DEWPOINT;
@@ -68,6 +65,7 @@ extern const char *TXT_FULL_MOON;
 extern const char *TXT_WANING_GIBBOUS;
 extern const char *TXT_THIRD_QUARTER;
 extern const char *TXT_WANING_CRESCENT;
+extern const char *TXT_TODAY_RAIN;
 
 // UV INDEX
 extern const char *TXT_UV_LOW;
@@ -75,6 +73,13 @@ extern const char *TXT_UV_MODERATE;
 extern const char *TXT_UV_HIGH;
 extern const char *TXT_UV_VERY_HIGH;
 extern const char *TXT_UV_EXTREME;
+
+// WBGT 
+extern const char *TXT_WBGT_NORISK;
+extern const char *TXT_WBGT_LOWRISK;
+extern const char *TXT_WBGT_MODRISK;
+extern const char *TXT_WBGT_HIGHRISK;
+extern const char *TXT_WBGT_EXTREMERISK;
 
 // WIFI
 extern const char *TXT_WIFI_EXCELLENT;
@@ -110,6 +115,9 @@ extern const char *TXT_UNITS_DIST_MILES;
 extern const char *TXT_UNITS_PRECIP_MILLIMETERS;
 extern const char *TXT_UNITS_PRECIP_CENTIMETERS;
 extern const char *TXT_UNITS_PRECIP_INCHES;
+
+extern const char *TXT_UNITS_SOLAR_RADIATION_WATTS_METERSQUARED;
+
 
 // MISCELLANEOUS MESSAGES
 // Title Case
@@ -167,21 +175,6 @@ extern const std::vector<String> TERM_HURRICANE_WARNING;
 extern const std::vector<String> TERM_HURRICANE;
 extern const std::vector<String> TERM_DUST;
 extern const std::vector<String> TERM_STRONG_WIND;
-
-// AIR QUALITY INDEX
-extern "C" {
-extern const aqi_scale_t AQI_SCALE;
-extern const char *AUSTRALIA_AQI_TXT[6];
-extern const char *CANADA_AQHI_TXT[4];
-extern const char *EUROPEAN_UNION_CAQI_TXT[5];
-extern const char *HONG_KONG_AQHI_TXT[5];
-extern const char *INDIA_AQI_TXT[6];
-extern const char *CHINA_AQI_TXT[6];
-extern const char *SINGAPORE_PSI_TXT[5];
-extern const char *SOUTH_KOREA_CAI_TXT[4];
-extern const char *UNITED_KINGDOM_DAQI_TXT[4];
-extern const char *UNITED_STATES_AQI_TXT[6];
-}
 
 // COMPASS POINT
 extern const char *COMPASS_POINT_NOTATION[32];
