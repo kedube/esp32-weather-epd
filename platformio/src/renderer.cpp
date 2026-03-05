@@ -266,7 +266,7 @@ void powerOffDisplay()
 
 // drawCurrentSunrise
 #ifdef POS_SUNRISE
-void drawCurrentSunrise(const owm_current_t &current)
+void drawCurrentSunrise(const wx_current_t &current)
 {
   String dataStr, unitStr;
   int PosX = POS_SUNRISE % 2;
@@ -294,7 +294,7 @@ void drawCurrentSunrise(const owm_current_t &current)
 
 // drawCurrentWind
 #ifdef POS_WIND
-void drawCurrentWind(const owm_current_t &current)
+void drawCurrentWind(const wx_current_t &current)
 {
   String dataStr, unitStr;
   int PosX = (POS_WIND % 2);
@@ -376,7 +376,7 @@ void drawCurrentWind(const owm_current_t &current)
 
 // drawCurrentUVI
 #ifdef POS_UVI
-void drawCurrentUVI(const owm_current_t &current)
+void drawCurrentUVI(const wx_current_t &current)
 {
   String dataStr, unitStr;
   int PosX = (POS_UVI % 2);
@@ -432,72 +432,7 @@ void drawCurrentUVI(const owm_current_t &current)
 #ifdef POS_AIR_QULITY
 void drawCurrentAirQuality(const owm_resp_air_pollution_t &owm_air_pollution)
 {
-  String dataStr, unitStr;
-  int PosX = (POS_AIR_QULITY % 2);
-  int PosY = static_cast<int>(POS_AIR_QULITY / 2);
-
-  // icons
-  display.drawInvertedBitmap(162 * PosX, 204 + (48 + 8) * PosY,
-                             air_filter_48x48, 48, 48, GxEPD_BLACK);
-
-  // labels
-  display.setFont(&FONT_7pt8b);
-
-  const char *air_quality_index_label;
-  if (aqi_desc_type(AQI_SCALE) == AIR_QUALITY_DESC)
-  {
-    air_quality_index_label = TXT_AIR_QUALITY;
-  }
-  else // (aqi_desc_type(AQI_SCALE) == AIR_POLLUTION_DESC)
-  {
-    air_quality_index_label = TXT_AIR_POLLUTION;
-  }
-  drawString(48 + (162 * PosX), 204 + 10 + (48 + 8) * PosY, air_quality_index_label, LEFT);
-
-  // spacing between end of index value and start of descriptor text
-  const int sp = 8;
-
-  // air quality index
-  display.setFont(&FONT_12pt8b);
-  const owm_components_t &c = owm_air_pollution.components;
-  // OpenWeatherMap does not provide pb (lead) conentrations, so we pass NULL.
-  int aqi = calc_aqi(AQI_SCALE, c.co, c.nh3, c.no, c.no2, c.o3, NULL, c.so2,
-                                c.pm10, c.pm2_5);
-  int aqi_max = aqi_scale_max(AQI_SCALE);
-  if (aqi > aqi_max)
-  {
-    dataStr = "> " + String(aqi_max);
-  }
-  else
-  {
-    dataStr = String(aqi);
-  }
-  drawString(48 + (162 * PosX), 204 + 17 / 2 + (48 + 8) * PosY + 48 / 2, dataStr, LEFT);
-  display.setFont(&FONT_7pt8b);
-  dataStr = String(aqi_desc(AQI_SCALE, aqi));
-  int max_w = (162 + (PosX * 162) - sp) - (display.getCursorX() + sp);
-  if (getStringWidth(dataStr) <= max_w)
-  { // Fits on a single line, draw along bottom
-    drawString(display.getCursorX() + sp, 204 + 17 / 2 + (48 + 8) * PosY + 48 / 2,
-               dataStr, LEFT);
-  }
-  else
-  { // use smaller font
-    display.setFont(&FONT_5pt8b);
-    if (getStringWidth(dataStr) <= max_w)
-    { // Fits on a single line with smaller font, draw along bottom
-      drawString(display.getCursorX() + sp,
-                 204 + 17 / 2 + (48 + 8) * PosY + 48 / 2,
-                 dataStr, LEFT);
-    }
-    else
-    { // Does not fit on a single line, draw higher to allow room for 2nd line
-      drawMultiLnString(display.getCursorX() + sp,
-                        204 + 17 / 2 + (48 + 8) * PosY + 48 / 2 - 10,
-                        dataStr, LEFT, max_w, 2, 10);
-    }
-  }
-
+  (void)owm_air_pollution;
   return;
 }
 #endif
@@ -549,7 +484,7 @@ void drawCurrentInTemp(float inTemp)
 
 // drawCurrentSunset
 #ifdef POS_SUNSET
-void drawCurrentSunset(const owm_current_t &current)
+void drawCurrentSunset(const wx_current_t &current)
 {
   String dataStr, unitStr;
   int PosX = (POS_SUNSET % 2);
@@ -577,7 +512,7 @@ void drawCurrentSunset(const owm_current_t &current)
 
 // drawCurrentHumidity
 #ifdef POS_HUMIDITY
-void drawCurrentHumidity(const owm_current_t &current)
+void drawCurrentHumidity(const wx_current_t &current)
 {
   String dataStr, unitStr;
   int PosX = (POS_HUMIDITY % 2);
@@ -605,7 +540,7 @@ void drawCurrentHumidity(const owm_current_t &current)
 
 // drawCurrentPressure
 #ifdef POS_PRESSURE
-void drawCurrentPressure(const owm_current_t &current)
+void drawCurrentPressure(const wx_current_t &current)
 {
   String dataStr, unitStr;
   int PosX = (POS_PRESSURE % 2);
@@ -675,7 +610,7 @@ void drawCurrentPressure(const owm_current_t &current)
 
 // drawCurrentVisibility
 #ifdef POS_VISIBILITY
-void drawCurrentVisibility(const owm_current_t &current)
+void drawCurrentVisibility(const wx_current_t &current)
 {
   String dataStr, unitStr;
   int PosX = (POS_VISIBILITY % 2);
@@ -687,7 +622,7 @@ void drawCurrentVisibility(const owm_current_t &current)
 
   // labels
   display.setFont(&FONT_7pt8b);
-  drawString(48 + (162 * PosX), 204 + 10 + (48 + 8) * PosY, TXT_VISIBILITY, LEFT);
+  drawString(48 + (162 * PosX), 204 + 10 + (48 + 8) * PosY, "Visibility", LEFT);
 
   // visibility
   display.setFont(&FONT_12pt8b);
@@ -766,7 +701,7 @@ void drawCurrentInHumidity(float inHumidity)
 
 // drawCurrentMoonrise
 #ifdef POS_MOONRISE
-void drawCurrentMoonrise(const owm_daily_t &today)
+void drawCurrentMoonrise(const wx_daily_t &today)
 {
   String dataStr, unitStr;
   int PosX = POS_MOONRISE % 2;
@@ -795,7 +730,7 @@ void drawCurrentMoonrise(const owm_daily_t &today)
 
 // drawCurrentMoonset
 #ifdef POS_MOONSET
-void drawCurrentMoonset(const owm_daily_t &today)
+void drawCurrentMoonset(const wx_daily_t &today)
 {
   String dataStr, unitStr;
   int PosX = (POS_MOONSET % 2);
@@ -823,7 +758,7 @@ void drawCurrentMoonset(const owm_daily_t &today)
 
 // drawCurrentMoonphase
 #ifdef POS_MOONPHASE
-void drawCurrentMoonphase(const owm_daily_t &daily)
+void drawCurrentMoonphase(const wx_daily_t &daily)
 {
   String dataStr, unitStr;
   int PosX = (POS_MOONPHASE % 2);
@@ -870,7 +805,7 @@ void drawCurrentMoonphase(const owm_daily_t &daily)
 
 // drawCurrentDewpoint
 #ifdef POS_DEWPOINT
-void drawCurrentDewpoint(const owm_current_t &current)
+void drawCurrentDewpoint(const wx_current_t &current)
 {
   String dataStr, unitStr;
   int PosX = (POS_DEWPOINT % 2);
@@ -955,17 +890,17 @@ void drawCurrentConditions(const wx_current_t &current,
   drawString(display.getCursorX(), 196 / 2 - 69 / 2 + 20, unitStr, LEFT);
   // current Dew Point
 #ifdef UNITS_TEMP_KELVIN
-  dataStr = String(TXT_DEW_POINT) + ' '
+  dataStr = String(TXT_DEWPOINT) + ' '
             + String(static_cast<int>(std::round(
               celsius_to_kelvin(current.dew_point))));
 #endif
 #ifdef UNITS_TEMP_CELSIUS
-  dataStr = String(TXT_DEW_POINT) + ' '
+  dataStr = String(TXT_DEWPOINT) + ' '
             + String(static_cast<int>(std::round(current.dew_point)))
             + '\260';
 #endif
 #ifdef UNITS_TEMP_FAHRENHEIT
-  dataStr = String(TXT_DEW_POINT) + ' '
+  dataStr = String(TXT_DEWPOINT) + ' '
             + String(static_cast<int>(std::round(
                      celsius_to_fahrenheit(current.dew_point))))
             + '\260';
@@ -1227,14 +1162,6 @@ drawString(display.getCursorX(), 204 + 17 / 2 + (48 + 8) * 1 + 48 / 2,
              unitStr, LEFT);
 
   #endif // defined(DISP_BW_V2) || defined(DISP_3C_B) || defined(DISP_7C_F)
-
-  // sunset
-  memset(timeBuffer, '\0', sizeof(timeBuffer));
-  ts = current.sunset;
-  timeInfo = localtime(&ts);
-  display.setFont(&FONT_12pt8b);
-  _strftime(timeBuffer, sizeof(timeBuffer), TIME_FORMAT, timeInfo);
-  drawString(170 + 48, 204 + 17 / 2 + (48 + 8) * 0 + 48 / 2, timeBuffer, LEFT);
 
   // humidity
   dataStr = String(current.humidity);

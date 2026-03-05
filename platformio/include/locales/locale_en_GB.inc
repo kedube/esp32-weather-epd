@@ -75,12 +75,12 @@ const char *TXT_WIND_GUST          = "Gusts";
 const char *TXT_HUMIDITY           = "Humidity";
 const char *TXT_UV_INDEX           = "UV Index";
 const char *TXT_SOLAR_RADIATION    = "Solar Radiation";
+const char *TXT_VISIBILITY         = "Visibility";
 const char *TXT_PRESSURE           = "Pressure";
 const char *TXT_WBGT               = "WBGT";
 const char *TXT_LIGHTNING          = "Lightning";
 const char *TXT_INDOOR_TEMPERATURE = "Temperature";
 const char *TXT_INDOOR_HUMIDITY    = "Humidity";
-<<<<<<< HEAD
 const char *TXT_DEWPOINT           = "Dew Point";
 
 // MOON PHASE
@@ -93,10 +93,8 @@ const char *TXT_FULL_MOON       = "Full Moon";
 const char *TXT_WANING_GIBBOUS  = "Waning Gibbous";
 const char *TXT_THIRD_QUARTER   = "Last Quarter";
 const char *TXT_WANING_CRESCENT = "Waning Crescent";
-=======
 const char *TXT_DEW_POINT          = "Dew Point";
 const char *TXT_TODAY_RAIN         = "Today's Rain";
->>>>>>> upstream/Tempest
 
 // UV INDEX
 const char *TXT_UV_LOW       = "Low";
@@ -109,7 +107,7 @@ const char *TXT_UV_EXTREME   = "Extreme";
 const char *TXT_WBGT_NORISK = "No Risk";
 const char *TXT_WBGT_LOWRISK = "Low Risk";
 const char *TXT_WBGT_MODRISK = "Moderate Risk";
-const char *TXT_WBGT_HGIHRISK = "High Risk";
+const char *TXT_WBGT_HIGHRISK = "High Risk";
 const char *TXT_WBGT_EXTREMERISK = "Extreme Risk";
 
 // WIFI

@@ -60,6 +60,8 @@ typedef enum alignment
   CENTER
 } alignment_t;
 
+typedef struct owm_resp_air_pollution owm_resp_air_pollution_t;
+
 uint16_t getStringWidth(const String &text);
 uint16_t getStringHeight(const String &text);
 void drawString(int16_t x, int16_t y, const String &text, alignment_t alignment,
@@ -82,19 +84,19 @@ void drawStatusBar(const String &statusStr, const String &refreshTimeStr,
                    int rssi, uint32_t batVoltage);
 void drawError(const uint8_t *bitmap_196x196,
                const String &errMsgLn1, const String &errMsgLn2="");
-void drawCurrentSunrise(const owm_current_t &current);
-void drawCurrentSunset(const owm_current_t &current);
+void drawCurrentSunrise(const wx_current_t &current);
+void drawCurrentSunset(const wx_current_t &current);
 void drawCurrentInTemp(float inTemp);
 void drawCurrentInHumidity(float inHumidity);
-void drawCurrentMoonrise(const owm_daily_t &today);
-void drawCurrentMoonset(const owm_daily_t &today);
-void drawCurrentWind(const owm_current_t &current);
-void drawCurrentHumidity(const owm_current_t &current);
-void drawCurrentUVI(const owm_current_t &current);
-void drawCurrentPressure(const owm_current_t &current);
-void drawCurrentVisibility(const owm_current_t &current);
+void drawCurrentMoonrise(const wx_daily_t &today);
+void drawCurrentMoonset(const wx_daily_t &today);
+void drawCurrentWind(const wx_current_t &current);
+void drawCurrentHumidity(const wx_current_t &current);
+void drawCurrentUVI(const wx_current_t &current);
+void drawCurrentPressure(const wx_current_t &current);
+void drawCurrentVisibility(const wx_current_t &current);
 void drawCurrentAirQuality(const owm_resp_air_pollution_t &owm_air_pollution);
-void drawCurrentMoonphase(const owm_daily_t &today);
-void drawCurrentDewpoint(const owm_current_t &current);
+void drawCurrentMoonphase(const wx_daily_t &today);
+void drawCurrentDewpoint(const wx_current_t &current);
 
 #endif

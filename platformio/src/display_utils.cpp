@@ -376,7 +376,7 @@ const char *getWBGTdesc(float wbgt)
   } else if (wbgt >= 85 && wbgt < 88) {
     return TXT_WBGT_MODRISK;
   } else if (wbgt >= 88 && wbgt < 90) {
-    return TXT_WBGT_HGIHRISK;
+    return TXT_WBGT_HIGHRISK;
   } else {
     return TXT_WBGT_EXTREMERISK;
   }
@@ -1493,7 +1493,7 @@ static const unsigned char *moon_phase_icon_arr[] = {
  *  scale range to match 28 numbers of different icons
  *  offset +0.5 to shift icon to center of moon phase period
 */
-const uint8_t *getMoonPhaseBitmap48(const owm_daily_t &daily)
+const uint8_t *getMoonPhaseBitmap48(const wx_daily_t &daily)
 {
   int n = static_cast<int>(daily.moon_phase * 28 + 0.5);
     return moon_phase_icon_arr[n];
@@ -1501,7 +1501,7 @@ const uint8_t *getMoonPhaseBitmap48(const owm_daily_t &daily)
 
 
 // Returns the current moon phase string
-  const char *getMoonPhaseStr(const owm_daily_t &daily)
+  const char *getMoonPhaseStr(const wx_daily_t &daily)
 {
   int n = static_cast<int>(daily.moon_phase * 28 + 0.5);
   switch(n)

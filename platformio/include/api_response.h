@@ -63,6 +63,7 @@ typedef struct wx_current
   float   wind_speed;       // Wind speed. Wind speed. Units – default: metre/sec,
   float   wind_gust;        // (where available) Wind gust. Units – default: metre/sec
   int     wind_deg;         // Wind direction, degrees (meteorological)
+  int     visibility;       // Visibility, meters
   float   rain_day;          // (where available) Rain volume for local day, mm
   float   wbgt;             // Wetbulb Globe Temp, Celsius
   int64_t last_strike_time;
@@ -96,6 +97,9 @@ typedef struct wx_daily
   int64_t dt;               // Time of the forecasted data, unix, UTC
   int64_t sunrise;          // Sunrise time, Unix, UTC
   int64_t sunset;           // Sunset time, Unix, UTC
+  int64_t moonrise;         // Moonrise time, Unix, UTC
+  int64_t moonset;          // Moonset time, Unix, UTC
+  float   moon_phase;       // Moon phase. 0 and 1 are new moon, 0.5 is full moon.
   wx_temp_t            temp;
   float   pop;              // Probability of precipitation. The values of the parameter vary between 0 and 1, where 0 is equal to 0%, 1 is equal to 100%
   weather_condition_t         weather;

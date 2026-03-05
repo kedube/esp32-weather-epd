@@ -95,6 +95,7 @@ DeserializationError deserializeTempestCall(Stream &json,
   r.current.wind_speed = current["wind_avg"].as<float>(); // default m/s
   r.current.wind_gust  = current["wind_gust"] .as<float>(); // default m/s
   r.current.wind_deg   = current["wind_direction"]  .as<int>();
+  r.current.visibility = current["visibility"] .as<int>();
   r.current.rain_day    = current["precip_accum_local_day"].as<float>();
   r.current.sunrise    = doc["forecast"]["daily"][0]["sunrise"].as<int64_t>();
   r.current.sunset     = doc["forecast"]["daily"][0]["sunset"].as<int64_t>();
@@ -133,6 +134,9 @@ DeserializationError deserializeTempestCall(Stream &json,
     r.daily[i].dt         = daily["day_start_local"]        .as<int64_t>();
     r.daily[i].sunrise    = daily["sunrise"]   .as<int64_t>();
     r.daily[i].sunset     = daily["sunset"]    .as<int64_t>();
+    r.daily[i].moonrise   = daily["moonrise"]  .as<int64_t>();
+    r.daily[i].moonset    = daily["moonset"]   .as<int64_t>();
+    r.daily[i].moon_phase = daily["moon_phase"] .as<float>();
     r.daily[i].temp.min   = daily["air_temp_low"]  .as<float>();
     r.daily[i].temp.max   = daily["air_temp_high"]  .as<float>();
     r.daily[i].pop        = daily["precip_probablility"].as<float>();
